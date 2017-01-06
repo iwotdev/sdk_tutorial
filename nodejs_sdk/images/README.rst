@@ -13,3 +13,12 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
 `iWoT Node.JS SDK <http://dev.iwot.io/#/web/sdks>`__ 3.
 取得\ `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`__
 (在金鑰上按下滑鼠左鍵可複製到剪貼簿) 4. 建立目錄結構
+
+::
+
+    tutorial/
+    ├── iwot/       <- iWoT Node.JS SDK
+    └── index.js    <- 裝置端程式
+
+程式碼說明
+----------
