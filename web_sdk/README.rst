@@ -1,6 +1,6 @@
 .. contents::
 
-iWoT Javascript Web Browser SDK 入門教學
+iWoT Device SDK for Web Browser 入門教學
 ========================================
 
 iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套件實作了完整的 iWoT 通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配 iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。此範例使用 iWoT Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動。

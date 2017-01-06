@@ -6,9 +6,9 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 iWoT Device SDK 提供了不同語言與平台的版本，請參閱下列教學文件
 
 - `Node.JS (Javascript) <./nodejs_sdk>`_
-- Web Browser (Javascript)
-- Android (Java)
-- NodeMCU (C)
+- `Web Browser (Javascript) <./web_sdk>`_
+- `Android (Java) <./android_sdk>`_
+- `NodeMCU (C) <./nodemcu_sdk>`_
 
 有關 API 的完整說明，請參考 iWoT 開發者主控台上的 `SDK 文件 <http://dev.iwot.io/#/web/sdks>`_
 。
