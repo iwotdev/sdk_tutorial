@@ -392,3 +392,22 @@ property 的需求，則必須實作 properties handler。
     emit events -> {"event1":{"values":{"n":3}}}
     emit events -> {"event1":{"values":{"n":4}}}
     update property -> {"property1":{"values":{"b":true}}}
+
+與 iWoT Cloud 互動
+~~~~~~~~~~~~~~~~~~
+
+| 登入 `iWoT <https://dev.iwot.io>`__\ ，可以看到此裝置已上線
+| |裝置已連線|
+
+| 進入 Global Rule Engine
+| |進入規則引擎|
+
+| 建立規則一，這個規則將來自裝置的 event1 參數顯示在右方的 debug 頁籤中
+| |建立規則一|
+
+| 建立規則二，這個規則的作用是收到來自裝置的 property1
+  更新訊息時，將內容顯示在 debug 頁籤中
+| |建立規則二|
+
+裝置端每 3 秒及 6 秒會分別送出 event1 及 property1 更新訊息，因此 Global
+Rule Engine 將顯示以下訊息
