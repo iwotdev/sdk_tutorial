@@ -455,3 +455,23 @@ Rule Engine 將顯示以下訊息
 ::
 
     property changed -> {"property1":{"values":{"b":true}}}
+
+
+常見問題
+--------
+
+裝置程式沒有輸出 ``event: connect`` 訊息
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+請核對 ``accessKey`` 及 ``secretKey`` 是否正確，並確認 ``host``
+指向正確位址。 #### 裝置程式發生執行期錯誤 刪除
+tutorial/iwot/node\_modules/\* 並在 tutorial/iwot/ 目錄重新執行
+``npm install``\ 。 #### Global Rule Engine 的 debug
+頁籤沒有顯示預期中的資料 確認規則一與規則二的 iWoT\_Thing
+元件已依照上述教學文件正確設定。請注意規則二，因為是 property changed
+事件，必須選擇 Apply To one thing 並指定 iwot\_thing\_1。 ####
+按下規則三或規則四的 inject 元件，裝置端沒有對應的輸出
+確認規則三與規則四的 iWoT\_Thing
+元件已依照上述教學文件正確設定。請注意規則四，因為是 set property
+動作，必須選擇 Apply To one thing 並指定 iwot\_thing\_1。
+
