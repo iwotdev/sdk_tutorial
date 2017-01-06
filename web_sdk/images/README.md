@@ -7,22 +7,28 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 1.  下載 [iWoT Web SDK](http://dev.iwot.io/#/web/sdks)
 2.  取得[開發者金鑰](http://dev.iwot.io/#/web/sdks) (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
 3.  建立目錄結構
+
 ```
 ball/
 ├── iwot/       <- iWoT Web SDK
 ├── ball.js     <- 網頁端程式
 └── ball.html   <- 網頁主畫面
 ```
+
 ## 程式碼說明
 
 首先在 `ball.html` 檔引入最新版的 iWoT Web SDK
+
 ```
 <script type="text/javascript" src="iwot/iwot.min.js"> </script>
 ```
+
 並在 `ball.js` 裡建立實例
+
 ```
 var thing = new window.iWoT.iWoT.Thing();
 ```
+
 接下來 iWoT Web SDK 的所有動作都會透過 `thing` 來操作。基本流程如下
 
 1.  準備 Web Thing Model
@@ -35,6 +41,7 @@ var thing = new window.iWoT.iWoT.Thing();
 
 每一個 iWoT 裝置都會對應到一個 Web Thing Model，用來描述此裝置的能力。  
 本範例的 model 如下：
+
 ```
 var model = {
     "id": "iWoT_ball_1",
@@ -74,6 +81,7 @@ var model = {
     }
 };
 ```
+
 本網頁範例中的裝置：
 
 * 具有三個 `properties` -> r / g / b，代表三種顏色，最大值為 255，最小值為 0。
@@ -82,6 +90,7 @@ var model = {
 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
 
 ### 準備 SDK callback
+
 ```
 thing.on('close', function () {
     console.log('event: close');
@@ -103,6 +112,7 @@ thing.on('connect', function () {
     console.log('event: connect');
 });
 ```
+
 當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些 callback 取得目前的連線狀態。_網路斷線時 SDK 會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。_
 
 確認收到 `connect callback` 之後就可開始與 iWoT 的訊息傳遞。
@@ -111,6 +121,7 @@ thing.on('connect', function () {
 
 為了要透過 UI 控制 property R / G / B，必須先建置 `ball.html`，撰寫 `<div id="ball"></div>` 來產生一個 2D 球形的 UI。  
 在操控 UI 方面則透過 input [ type = "range" ] 元素進行操控，並依照顏色設定最小值為 0，最大值為 255，間距為 1 ，且分別命名為不同的 id 方便操控，最後加上 `onchange="changeColor(this.id)"` 來觸發此元件的改變顏色事件，並在此函式中透過 `thing.publishProperties(...)` 傳遞數值至 iWoT。
+
 ```
 var input_r = document.getElementById('ctrl_r'),
     input_g = document.getElementById('ctrl_g'),
@@ -161,9 +172,11 @@ function changeColor(id){
   ball.style.backgroundColor = 'rgb('+ R + ',' + G + ',' + B +')';
 }
 ```
+
 ### 實作透過 iWoT 來接收 action 改變亮度
 
 要讓網頁接收從 iWoT 送出的訊息，需撰寫 action handler 進行後續的處理工作，本範例會針對此裝置的亮度進行調整，訊息方向由 iWoT 的規則引擎傳遞至本範例的裝置上。
+
 ```
 function actionHandler(action, done) {
     if(action.brightness !== undefined){
@@ -174,11 +187,13 @@ function actionHandler(action, done) {
     }
 }
 ```
+
 當外部呼叫 action 時，會交給 `action handler` 去處理。所有的 action 都交由同一個 `action handler` 處理，因此要判別觸發哪一個 action ，透過判別式 `if(action.brightness !== undefined)` 來確認是否為 `brightness` 的 action ，收到後可以取得傳入值：`action.brightness.values.bright` ，最後必須呼叫 `done()` 通知 iWoT 此 action 已執行完畢。
 
 ### 初始化並建立連線
 
 上述的 model、callback 和相關 handler 準備好之後就可以進行初始化並建立連線
+
 ```
 thing.init({
     model: JSON.parse(JSON.stringify(model)),
@@ -193,10 +208,12 @@ thing.init({
     }
 });
 ```
+
 `accessKey` 跟 `secretKey` 請填入一開始準備開發環境時取得的_開發者金鑰_。`host` 預設為 _dev.iwot.io_，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。  
 初始化成功之後呼叫 `thing.connect()` 並傳入前一節準備的 action handler。
 
 ### 完整的 ball.html 程式碼
+
 ```
 <!DOCTYPE html>
 <html lang="zh-tw">
@@ -252,7 +269,9 @@ thing.init({
 </body>
 </html>
 ```
+
 ### 完整的 ball.js 程式碼
+
 ```
 var input_r = document.getElementById('ctrl_r'),
     input_g = document.getElementById('ctrl_g'),
@@ -386,6 +405,7 @@ function changeColor(id){
   ball.style.backgroundColor = 'rgb('+ R + ',' + G + ',' + B +')';
 }
 ```
+
 ## 執行結果
 
 ### 運行本地端伺服器並開啟網頁
@@ -423,12 +443,12 @@ function changeColor(id){
 
 ## 常見問題
 
-#### 操控 Web UI 改變球的 r / g / b 顏色，debug tab 沒有顯示相對應數值
+### 操控 Web UI 改變球的 r / g / b 顏色，debug tab 沒有顯示相對應數值
 
 確認規則一至三是否已照上次教學文件正確設定。請注意，因為是 property changed 事件，必須選擇 Apply To one thing 並指定 iWoT\_Ball\_1。如正常輸出數值應呈現如下圖：
 
 ![debug tab 輸出範本](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/8.png)
 
-#### 按下規則四中的 inject 元件，網頁上的球沒有呈現相對應的亮度變化
+### 按下規則四中的 inject 元件，網頁上的球沒有呈現相對應的亮度變化
 
 確認規則四的 iWoT_Thing 元件已依照上述教學文件正確設定。
