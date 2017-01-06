@@ -10,5 +10,5 @@ iWoT Device SDK 提供了不同語言與平台的版本，請參閱下列教學�
 - `Android (Java) <./android_sdk>`_
 - `NodeMCU (C) <./nodemcu_sdk>`_
 
-有關 API 的完整說明，請參考 iWoT 開發者主控台上的 `SDK 文件 <http://dev.iwot.io/#/web/sdks>`_
+有關 API 的完整說明，請參考 iWoT 開發者主控台上的 `SDK 文件 <https://dev.iwot.io/#/web/sdks>`_
 。

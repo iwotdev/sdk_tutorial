@@ -8,8 +8,8 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 準備開發環境
 ------------
 
-1. 下載 `iWoT Web SDK <http://dev.iwot.io/#/web/sdks>`_
-2. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
+1. 下載 `iWoT Web SDK <https://dev.iwot.io/#/web/sdks>`_
+2. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
 3. 建立目錄結構
 
 ::

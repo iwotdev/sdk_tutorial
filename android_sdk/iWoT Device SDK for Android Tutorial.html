@@ -44,13 +44,13 @@
 <h2 id="_1">準備開發環境</h2>
 <ol>
 <li>安裝 <a href="https://developer.android.com/studio/index.html">Android Studio</a></li>
-<li>下載 <a href="http://dev.iwot.io/#/web/sdks">iWoT Android SDK</a></li>
-<li>取得<a href="http://dev.iwot.io/#/web/sdks">開發者金鑰</a> (在金鑰上按下滑鼠左鍵可複製到剪貼簿)</li>
+<li>下載 <a href="https://dev.iwot.io/#/web/sdks">iWoT Android SDK</a></li>
+<li>取得<a href="https://dev.iwot.io/#/web/sdks">開發者金鑰</a> (在金鑰上按下滑鼠左鍵可複製到剪貼簿)</li>
 <li>建立一個顯示Accelerometer數值的專案。流程如下</li>
 </ol>
 <p>首先修改Layout檔，預設為activity_main.xml，加入3個TextView分別來顯示Accelerometer的XYZ值，並用1個Switch來暫停或重啟Accelerometer數值的顯示</p>
-<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:layout_width=&quot;match_parent&quot;
+<pre><code>&lt;LinearLayout xmlns:android=&quot;schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;schemas.android.com/tools&quot; android:layout_width=&quot;match_parent&quot;
     android:layout_height=&quot;match_parent&quot; android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
     android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
     android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
