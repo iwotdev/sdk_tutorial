@@ -12,8 +12,8 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
 ------------
 
 1. 安裝 `Node.JS <https://nodejs.org/en/download/>`_
-2. 下載並解壓縮 `iWoT Node.JS SDK <http://dev.iwot.io/#/web/sdks>`__
-3. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
+2. 下載並解壓縮 `iWoT Node.JS SDK <https://dev.iwot.io/#/web/sdks>`_
+3. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
 4. 建立目錄結構
 
 ::
@@ -81,10 +81,10 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
         }
     };
 
-其中定義了此裝置的 id 為 ``iwot_thing_1``\ ，並且具備以下能力：
+其中定義了此裝置的 id 為 ``iwot_thing_1``，並且具備以下能力：
 
 -  擁有一個 property ->
-   ``property1``\ ，裡面有一個布林型態的值。Property
+   ``property1``，裡面有一個布林型態的值。Property
    通常代表裝置的狀態，在本範例中我們宣告了一個變數用來對應這個
    property：
 
@@ -92,7 +92,7 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
 
     var property_b = false;
 
--  可以接受一個 action -> ``action1``\ ，包含一個字串型態的傳入值
+-  可以接受一個 action -> ``action1``，包含一個字串型態的傳入值
 -  具有發出一個 event -> ``event1`` 的能力，附帶一個整數值
 
 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
