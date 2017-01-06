@@ -411,33 +411,27 @@ function changeColor(id){
 ### 運行本地端伺服器並開啟網頁
 
 本範例需透過本地端伺服器開啟 `ball.html`，開啟網頁後如下圖所呈現的畫面：
-
 ![ball預設呈現畫面](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/1.png)
 
 ### 與 iWoT Cloud 互動
 
 登入 [iWoT](https://dev.iwot.io)，可以看到此裝置已上線  
-
 ![裝置已連線](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/2.png)
 
 進入 Global Rule Engine  
-
 ![進入規則引擎](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/3.png)
 
 建立規則一，設定裝置當 `property r` 有更新時就顯示在 debug 頁籤上。debug 頁籤在 Rule Engine 畫面右邊。
 規則若有任何調整，需按下部署按鈕，異動過的規則才會生效。
-
 ![建立規則一](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/4.png)
 
 建立規則二，同規則一的操作方式，顯示 `property g` 值在 debug 頁籤上。
 ![建立規則二](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/5.png)
 
 建立規則三，同規則一的操作方式，顯示 `property b` 值在 debug 頁籤上。
-
 ![建立規則三](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/6.png)  
 
 建立規則四，測試 `action brightness`。
-
 ![建立規則四](https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/7.png)  
 按下 inject 元件後，iWoT 呼叫 `actionHandler()` 並傳入 action 物件，其中 bright 參數值為 `0.2`，並將球的亮度調整為此數值。
 
