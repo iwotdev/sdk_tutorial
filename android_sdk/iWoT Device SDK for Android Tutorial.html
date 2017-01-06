@@ -568,17 +568,17 @@ private int precision = 100;
 </code></pre>
 
 <h2 id="_4">執行結果</h2>
-<img alt="執行畫面" src="https://justup.co/api/v2/file/c357189c-08e8-4870-94af-3cfb6a09c13a" /></p>
+<img alt="執行畫面" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/1.png" /></p>
 
 <h3 id="iwot-cloud">與 iWoT Cloud 互動</h3>
 <p>登入 <a href="https://dev.iwot.io">iWoT</a>，可以看到此裝置已上線<br />
-<img alt="裝置已連線" src="https://justup.co/api/v2/file/392a843a-747b-48eb-8745-99ca416c90bb" /></p>
+<img alt="裝置已連線" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/2.png" /></p>
 <p>進入 Global Rule Engine<br />
-<img alt="進入規則引擎" src="http://i.imgur.com/HhIdXvL.png" /></p>
+<img alt="進入規則引擎" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/3.png" /></p>
 <p>建立規則一，這個規則將來自裝置的 event -&gt; <code>orientation</code> 參數顯示在右方的 debug 頁籤中<br />
-<img alt="建立規則一" src="https://justup.co/api/v2/file/fe65175a-c900-49d2-8408-445f2f4ce5a0" /></p>
+<img alt="建立規則一" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/4.png" /></p>
 <p>建立規則二，這個規則的作用是收到來自裝置的 property -&gt; <code>pause</code> 更新訊息時，將內容顯示在 debug 頁籤中<br />
-<img alt="建立規則二" src="https://justup.co/api/v2/file/69f7db29-0516-4343-aef1-f050a483a02b" /></p>
+<img alt="建立規則二" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/5.png" /></p>
 <p>裝置端會送出 orientation 及 pause 更新訊息，因此 Global Rule Engine 將顯示以下訊息</p>
 <pre><code>2017/1/4 下午4:01:32b436ef92.00fc
 msg.payload : Object
@@ -598,15 +598,15 @@ msg.payload : Object
 </code></pre>
 
 <p>接著建立規則三，測試 action handler<br />
-<img alt="建立規則三" src="https://justup.co/api/v2/file/c2d47e78-2dd5-4adb-b169-9e654580caeb" /><br />
+<img alt="建立規則三" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/6.png" /><br />
 按下 <code>2</code>或是<code>4</code> 的 inject 元件後，iWoT 會呼叫裝置的 <code>onActions()</code>  並傳入 var 物件，其中 vi.numValue 參數值為 <code>2</code>或是<code>4</code>。依照 <code>onActions()</code> 的實作，會將Accelerometer數值顯示的精準度改為小數點下2位或是4位</p>
-<img alt="Set Precision" src="https://justup.co/api/v2/file/fc5df950-bca5-4040-8fed-5c60775b706d" /><br />
+<img alt="Set Precision" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/7.png" /><br />
 
 <p>建立規則四，測試設定 property<br />
-<img alt="建立規則四" src="https://justup.co/api/v2/file/302ccf9a-47e5-4e15-a9bc-1a06040a888b" /><br />
+<img alt="建立規則四" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/8.png" /><br />
 按下 <code>true</code>或是<code>false</code> 的 inject 元件後，iWoT 會呼叫裝置的 <code>onProperties()</code>  並傳入 var 物件，其中 item.boolValue 參數值為 <code>true</code>或是<code>false</code>。依照 <code>onProperties()</code> 的實作，會將pause的開關設定為開或是關，另外，也會暫停或是開始發送Accelerometer的數值到iWoT</p>
 
-<img alt="Pause Resume" src="https://justup.co/api/v2/file/006d22b0-e407-4532-884d-7d61611fcaa2" /><br />
+<img alt="Pause Resume" src="https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/9.png" /><br />
 
 <h2 id="_5">常見問題</h2>
 <h4 id="event-connect">在iWoT Cloud看不到此裝置</h4>
