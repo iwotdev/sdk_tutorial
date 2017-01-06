@@ -1,1 +1,0 @@
-# iWoT SDK Tutorial
