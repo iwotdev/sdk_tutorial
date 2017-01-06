@@ -146,7 +146,7 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
                 }
             };
             console.log('emit events -> ' + JSON.stringify(val));
-            thing.emitEvent(val);
+            thing.emitEvents(val);
         }, 3000);
 
         // 更新 property
@@ -168,7 +168,7 @@ event 的訊息傳遞方向為裝置端到 iWoT。上述程式碼在連線後每
 
 ::
 
-    thing.emitEvent(val);
+    thing.emitEvents(val);
 
 其中 val 參數為 event 內容，這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是 **帶有一個整數值的 "event1"**。同時我們將這個整數值依次遞增以便觀察 event 的變化。
 
@@ -313,7 +313,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
                 }
             };
             console.log('emit events -> ' + JSON.stringify(val));
-            thing.emitEvent(val);
+            thing.emitEvents(val);
         }, 3000);
 
         // update property
