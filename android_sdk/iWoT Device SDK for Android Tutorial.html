@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <link href="https://markable.in/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://markable.in//static/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://markable.in/static/editor/css/view_file.css">
+  <link rel="stylesheet" type="text/css" href="https://markable.in/static/css/code.css">
+</head>
+<body>
+  <div class="container">
+    <div id="content">
+      <div class="toc">
+<ul>
+<li><a href="#iwot-device-sdk-for-nodejs">iWoT Device SDK for Android 入門教學</a><ul>
+<li><a href="#_1">準備開發環境</a></li>
+<li><a href="#_2">程式碼說明</a><ul>
+<li><a href="#web-thing-model">準備 Web Thing Model</a></li>
+<li><a href="#sdk-callback">準備 SDK callback</a></li>
+<li><a href="#event-property-iwot">實作發送 event 及更新 property 至 iWoT</a></li>
+<li><a href="#actionproperties-handler">撰寫 action/properties handler</a></li>
+<li><a href="#_3">初始化並建立連線</a></li>
+<li><a href="#indexjs">完整的 MainActivity.java 程式碼</a></li>
+</ul>
+</li>
+<li><a href="#_4">執行結果</a><ul>
+<li><a href="#iwot-cloud">與 iWoT Cloud 互動</a></li>
+</ul>
+</li>
+<li><a href="#_5">常見問題</a><ul>
+<li><a href="#event-connect">在iWoT Cloud看不到此裝置</a></li>
+<li><a href="#global-rule-engine-debug">Global Rule Engine 的 debug 頁籤沒有顯示預期中的資料</a></li>
+<li><a href="#inject">按下規則三或規則四的 inject 元件，裝置端沒有對應的輸出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="iwot-device-sdk-for-nodejs">iWoT Device SDK for Android 入門教學</h1>
+<p>iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套件實作了完整的 iWoT 通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配 iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。</p>
+<p>本教學範例示範如何建立一個Android的iWoT裝置，此裝置會將Accelerometer的數值傳遞給iWoT Cloud並從iWoT Cloud接收相關的參數設定並反應在裝置上。</p>
+<h2 id="_1">準備開發環境</h2>
+<ol>
+<li>安裝 <a href="https://developer.android.com/studio/index.html">Android Studio</a></li>
+<li>下載 <a href="http://dev.iwot.io/#/web/sdks">iWoT Android SDK</a></li>
+<li>取得<a href="http://dev.iwot.io/#/web/sdks">開發者金鑰</a> (在金鑰上按下滑鼠左鍵可複製到剪貼簿)</li>
+<li>建立一個顯示Accelerometer數值的專案。流程如下</li>
+</ol>
+<p>首先修改Layout檔，預設為activity_main.xml，加入3個TextView分別來顯示Accelerometer的XYZ值，並用1個Switch來暫停或重啟Accelerometer數值的顯示</p>
+<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot; android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot; android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    android:orientation=&quot;vertical&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot; tools:context=&quot;.MainActivity&quot;&gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot; &gt;
+
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text = &quot;Paused&quot;
+            / &gt;
+
+        &lt;Switch
+            android:id=&quot;@+id/paused&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;/ &gt;
+
+    &lt;/LinearLayout &gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_x&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;10dp&quot;
+        android:text=&quot;X:&quot;
+        android:textSize=&quot;30sp&quot;
+        android:textStyle=&quot;bold&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_y&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;10dp&quot;
+        android:text=&quot;Y:&quot;
+        android:textSize=&quot;30sp&quot;
+        android:textStyle=&quot;bold&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tv_z&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;10dp&quot;
+        android:text=&quot;Z:&quot;
+        android:textSize=&quot;30sp&quot;
+        android:textStyle=&quot;bold&quot; /&gt;
+
+&lt;/LinearLayout/&gt;
+</code></pre>
+
+<p>接下來，修改Activity檔，預設為MainActivity.java，實作SensorEventListener以取得Accelerometer的數值並顯示於畫面中</p>
+<pre><code>public class MainActivity extends AppCompatActivity implements SensorEventListener {
+
+    private Switch s_paused;
+    private boolean paused = false;
+    private TextView tv_x;
+    private TextView tv_y;
+    private TextView tv_z;
+    private SensorManager sManager;
+    private Sensor mSensorOrientation;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensorOrientation = sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        sManager.registerListener(this, mSensorOrientation, SensorManager.SENSOR_DELAY_UI);
+
+        tv_x = (TextView) findViewById(R.id.tv_x);
+        tv_y = (TextView) findViewById(R.id.tv_y);
+        tv_z = (TextView) findViewById(R.id.tv_z);
+
+        s_paused = (Switch) findViewById(R.id.paused);
+        s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                paused = isChecked;
+            }
+        });        
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (!paused) {
+            float x = event.values[1];
+            float y = event.values[2];
+            float z = event.values[0];
+
+            tv_x.setText(&quot;X: &quot; + x);
+            tv_y.setText(&quot;Y: &quot; + y);
+            tv_z.setText(&quot;Z: &quot; + z);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+}
+</code></pre>
+<p>至此，我們已完成一個可以讀取並顯示Accelerometer的數值的App。下一節，我們將描述如何使用iWoT SDK來與iWoT Cloud連線</p>
+
+<h2 id="_2">程式碼說明</h2>
+<p>首先，在MainActivity新增以下三個member variables</p>
+<pre><code>private Thing thing = null;
+private boolean connected = false;
+private int precision = 100;
+</code></pre>
+<p>thing是表示用iWoT SDK所創建的裝置實例 (thing instance)<br>connected是表示此裝置與iWoT Cloud的連線狀態<br>precision是表示Accelerometer數值的精準度，我們之後會從iWoT Cloud來操作他</p>
+<p>接下來 iWoT Device SDK 的所有動作都會透過 <code>thing</code> 來操作。基本流程如下</p>
+<ol>
+<li>準備 Web Thing Model</li>
+<li>準備 SDK callback</li>
+<li>實作發送 event 及更新 property 至 iWoT</li>
+<li>撰寫 action/properties handler</li>
+<li>初始化並建立連線</li>
+</ol>
+<h3 id="web-thing-model">準備 Web Thing Model</h3>
+<p>每一個 iWoT 裝置都會對應到一個 Web Thing Model。Model 內的 property/action/event  用來描述此裝置的能力，裝置內部及 iWoT 規則引擎將依據 model 的描述做對應處理。<br />
+本範例裝置的 model 如下：</p>
+<pre><code>{
+    &quot;id&quot;: &quot;iwot_android_thing_1&quot;,
+    &quot;classID&quot;: &quot;iwot_android_thing_model&quot;,
+    &quot;name&quot;: &quot;iWoT Android Thing&quot;,
+    &quot;properties&quot;: {
+      &quot;pause&quot;: {
+        &quot;name&quot;: &quot;Pause or Resume Sensors&quot;,
+        &quot;values&quot;: {
+          &quot;paused&quot;: {
+            &quot;type&quot;: &quot;boolean&quot;
+          }
+        }
+      }
+    },
+    &quot;actions&quot;: {
+      &quot;precision&quot;: {
+        &quot;name&quot;: &quot;Set Precision&quot;,
+        &quot;values&quot;: {
+          &quot;decimal&quot;: {
+            &quot;description&quot;: &quot;decimal places&quot;,
+            &quot;type&quot;: &quot;integer&quot;,
+            &quot;minValue&quot;: 0,
+            &quot;maxValue&quot;: 5,
+            &quot;required&quot;: true
+          }
+        }
+      }
+    },
+    &quot;events&quot;: {
+      &quot;orientation&quot;: {
+        &quot;name&quot;: &quot;Orientation Sensor&quot;,
+        &quot;values&quot;: {
+          &quot;x&quot;: {
+            &quot;type&quot;: &quot;float&quot;
+          },
+          &quot;y&quot;: {
+            &quot;type&quot;: &quot;float&quot;
+          },
+          &quot;z&quot;: {
+            &quot;type&quot;: &quot;float&quot;
+          }
+        }
+      }
+    }
+  }
+</code></pre>
+
+<p>其中定義了此裝置的 id 為 <code>iwot_android_thing_1</code>，並且具備以下能力：</p>
+<ul>
+<li>擁有一個 property -&gt; <code>pause</code>，裡面有一個布林型態的值。Property 通常代表裝置的狀態，在本範例中我們宣告了一個變數用來對應這個 property：</li>
+</ul>
+<pre><code>private boolean paused = false;
+</code></pre>
+
+<ul>
+<li>可以接受一個 action -&gt; <code>precision</code>，包含一個整數型態的傳入值</li>
+<li>具有發出一個 event -&gt; <code>orientation</code> 的能力，附帶三個浮點數值</li>
+</ul>
+<p>有關 Web Thing Model 的詳細說明請參閱另一份教學文件。</p>
+
+<h3 id="sdk-callback">準備 SDK callback</h3>
+<pre><code>    new Thing.IThingListener() {
+            @Override
+            public void onConnected() {
+                Log.v(&quot;[iWoT]&quot;, &quot;onConnected&quot;);
+                connected = true;
+            }
+
+            @Override
+            public void onDisconnected() {
+                Log.v(&quot;[iWoT]&quot;, &quot;onDisconnected&quot;);
+                connected = false;
+            }
+
+            @Override
+            public boolean onActions(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onActions&quot;);
+                return true;
+            }
+
+            @Override
+            public boolean onProperties(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onProperties&quot;);
+                return true;
+            }
+
+            @Override
+            public boolean onSystem(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onSystem&quot;);
+                return true;
+            }
+
+            @Override
+            public void onFailure(String s) {
+                Log.v(&quot;[iWoT]&quot;, &quot;onFailure: &quot; + s);
+            }
+        }
+</code></pre>
+
+<p>當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些 callback 取得目前的連線狀態。<em>網路斷線時 SDK 會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。</em></p>
+<h3 id="event-property-iwot">實作發送 event 及更新 property 至 iWoT</h3>
+<p>在收到 <code>onConnect</code> callback 之後就可以開始與 iWoT 的訊息傳遞。首先將Accelerometer的數值，以 event 的形式發送出去，所以我們修改 <code>onSensorChanged</code> 的callback，先根據使用者透過action所決定的precision來修改Accelerometer數值的精準度，然後串成一個JSON字串，接著透過<code>Model.parseVarObject</code>將此JSON字串轉成物件形式，最後透過<code>thing.sendEvents</code>將此event發送出去</p>
+<pre><code>    public void onSensorChanged(SensorEvent event) {
+        if (!paused) {
+            float x = event.values[1];
+            float y = event.values[2];
+            float z = event.values[0];
+
+            if (connected) {
+                x = x * precision / precision;
+                y = y * precision / precision;
+                z = z * precision / precision;
+
+                String json = &quot;{\&quot;events\&quot;:{\&quot;orientation\&quot;:{\&quot;values\&quot;:{\&quot;x\&quot;:&quot; + x + &quot;,\&quot;y\&quot;:&quot; + y + &quot;,\&quot;z\&quot;:&quot; + z + &quot;}}}}&quot;;
+                Model.VarObject var = Model.parseVarObject(json);
+                if(false == thing.sendEvents(var, 0, true)) {
+                    Log.v(&quot;iWoT&quot;, &quot;fail to send events.&quot;);
+                }
+            }
+
+            tv_x.setText(&quot;X: &quot; + x);
+            tv_y.setText(&quot;Y: &quot; + y);
+            tv_z.setText(&quot;Z: &quot; + z);
+        }
+    }
+</code></pre>
+
+<p>event 的訊息傳遞方向為裝置端到 iWoT。</p>
+<pre><code>thing.sendEvents(var, 0, true);
+</code></pre>
+
+<p>其中 var 參數為 event 內容，0是QoS(Quality of Service)，true表示broadcast mode。這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是<strong>帶有三個浮點數值的 <code>orientation</code></strong>。 這個參數是<code>Model.VarObject</code>的物件形式，你可以透過<code>Model.parseVarObject</code>來將一個JSON字串轉換成此物件形式，或是自行以<code>new</code>的方式來建立，關於第二種方式，在下面提及property時會有範例。</p>
+
+<p>接下來，我們用property -&gt; <code>pause</code>表示pause開關的裝態，並在狀態改變的時候將新的狀態發送出去。所以我們修改Switch的callback，在<code>onCheckedChanged</code>裡面先建立一個<code>Model.VarObject</code>的物件，這裡我們使用<code>new</code>的方式來建立。在iWoT SDK，我們使用<code>Model.VarObject</code>來描述property，event或是action所帶的參數。每個<code>Model.VarObject</code>只能描述property，event或是action其中的一種，不能混用，所以在這個例子，我們在<code>Model.VarObject</code>的初始化參數填上&quot;property&quot;。而一個<code>Model.VarObject</code>裡面可以有數個<code>Model.VarGroup</code>，每個<code>Model.VarGroup</code>表示一個property，一個event或是一個action。在這個例子，就是&quot;pause&quot;。而一個<code>Model.VarGroup</code>裡面還可以有數個<code>Model.VarItem</code>，每個<code>Model.VarItem</code>表示一個property的一組value，這組value是以一個key-value的形式來描述，在這個例子，key就是&quot;paused&quot;，而value就是一個表示pause開關的裝態的boolean值。由於這個過程有點繁瑣，所以我們建立一個<code>createSingleProperty</code>的function來輔助我們建立這個<code>Model.VarObject</code>，最後再透過<code>thing.publishProperty</code>將此publishProperty發送出去。</p>
+
+<pre><code>    private Model.VarObject createSingleProperty(String property, String key, boolean enabled) {
+        ArrayList<Model.VarItem> items = new ArrayList<Model.VarItem>();
+        items.add(new Model.VarItem(key, new Boolean(enabled)));
+
+        ArrayList<Model.VarGroup> groups = new ArrayList<Model.VarGroup>();
+        groups.add(new Model.VarGroup(property, items, null, null, null));
+
+        return new Model.VarObject(&quot;properties&quot;, groups);
+    }
+</code></pre>
+
+<pre><code>        s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                paused = isChecked;
+                if (null != thing && connected) {
+                    Model.VarObject property = createSingleProperty(&quot;pause&quot;, &quot;paused&quot;, paused);
+                    thing.publishProperty(property, 0);
+                }
+            }
+        });
+</code></pre>
+
+
+<p>property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 iWoT shadow device 設定裝置端的 property；或是裝置內部更新完之後發出 property changed 通知 iWoT shadow device。上述程式碼實作了後者，每當<code>pause</code> 改變就更新到 iWoT shadow device 上</p>
+<pre><code>thing.publishProperty(property, 0);
+</code></pre>
+
+<p>其中 property 參數為 property 內容，0是QoS(Quality of Service)，同樣的，這個 property 必須包含在此裝置的 model 當中。如果有多個 property，delta 可以只包含其中一個或部分 property。</p>
+<h3 id="actionproperties-handler">撰寫 action/properties handler</h3>
+<p>如果 model 中定義了 action，我們還必須實作 action handler，當外部呼叫此 action 時會交由對應的 action handler 處理。實作action handler就是override <code>Thing.IThingListener</code>的<code>onActions</code></p>
+<pre><code>            @Override
+            public boolean onActions(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onActions&quot;);
+                for (Model.VarGroup vg : var.groups) {
+                    if (&quot;precision&quot;.equals(vg.identifier)) {
+                        for (Model.VarItem vi : vg.items) {
+                            if (&quot;decimal&quot;.equals(vi.key)) {
+                                precision = (int) Math.pow(10, vi.numValue.intValue());
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+</code></pre>
+
+<p>所有的 action 都交由同一個 action handler 處理，因此必須先判斷所觸發的 action 是哪一個。以範例中的 model 為例，判斷方式為<code>Model.VarGroup.identifier</code>等於"precision"而且<code>Model.VarItem.key</code>等於"decimal"。收到後可以由 action 參數中取得傳入值：<code>vi.numValue.intValue</code>。<br />
+最後<code>return true</code> 通知 iWoT 該 action 已執行完畢。<em>請注意，若執行結果為失敗，請<code>return false</code> ，如此 iWoT 會紀錄該 action 的執行結果為失敗。</em></p>
+<p>前一節提到 property 訊息傳遞方向是雙向的，如果有來自裝置外部要求設定 property 的需求，則必須實作 properties handler。實作properties handler就是override <code>Thing.IThingListener</code>的<code>onProperties</code></p>
+<pre><code>            @Override
+            public boolean onProperties(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onProperties&quot;);
+                for (Model.VarGroup group : var.groups) {
+                    for (Model.VarItem item : group.items) {
+                        if (group.identifier.equals(&quot;pause&quot;) && item.key.equals(&quot;paused&quot;)) {
+                            s_paused.setChecked(item.boolValue);
+                        }
+                    }
+                }
+
+                return true;
+            }
+</code></pre>
+
+<p>同樣的，所有設定 property 的要求都交由同一個 handler 處理，因此必須先判斷要設定的 property 是哪一個。以範例中的 model 為例，判斷方式為<code>Model.VarGroup.identifier</code>等於"pause"而且<code>Model.VarItem.key</code>等於"paused"。設定值可以由 <code>item.boolValue</code> 取得。<br />
+最後也必須<code>return true</code>或是<code>return false</code> 來通知 iWoT 該 property 的設定成功與否。</p>
+
+<h3 id="_3">初始化並建立連線</h3>
+<p>上述的 model、callback 和相關 handler 準備好之後就可以進行初始化並建立連線</p>
+<pre><code>    private void connectIWoT() {
+        String modelJSON = &quot;{\&quot;id\&quot;:\&quot;iwot_android_thing_1\&quot;,\&quot;classID\&quot;:\&quot;iwot_android_thing_model\&quot;,\&quot;name\&quot;:\&quot;iWoT Android Thing\&quot;,\&quot;properties\&quot;:{\&quot;pause\&quot;:{\&quot;name\&quot;:\&quot;Pause or Resume Sensors\&quot;,\&quot;values\&quot;:{\&quot;paused\&quot;:{\&quot;type\&quot;:\&quot;boolean\&quot;}}}},\&quot;actions\&quot;:{\&quot;precision\&quot;:{\&quot;name\&quot;:\&quot;Set Precision\&quot;,\&quot;values\&quot;:{\&quot;decimal\&quot;:{\&quot;description\&quot;:\&quot;decimal places\&quot;,\&quot;type\&quot;:\&quot;integer\&quot;,\&quot;minValue\&quot;:0,\&quot;maxValue\&quot;:5,\&quot;required\&quot;:true}}}},\&quot;events\&quot;:{\&quot;orientation\&quot;:{\&quot;name\&quot;:\&quot;Orientation Sensor\&quot;,\&quot;values\&quot;:{\&quot;x\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;},\&quot;y\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;},\&quot;z\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;}}}}}&quot;;
+        String host = &quot;dev.iwot.io&quot;;
+        String accessKey = &quot;[your_access_key]&quot;;
+        String secretKey = &quot;[your_secret_key]&quot;;
+        int keepAlive = 60;
+        Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
+
+        Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
+        thing = new Thing();
+        if (!thing.init(config)) {
+            Log.v(&quot;[iWoT]&quot;, &quot;Fail to init iWoT SDK&quot;);
+            return;
+        }
+        thing.connect(getApplicationContext(), new Thing.IThingListener() {
+            .............
+        });        
+    }
+</code></pre>
+
+<p><code>accessKey</code> 跟 <code>secretKey</code> 請填入一開始準備開發環境時取得的<em>開發者金鑰</em>。<code>host</code> 預設為 <em>dev.iwot.io</em>，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。<code>modelJSON</code>就是前一節的model經過stringify後的字串。<code>keepAlive</code>是本裝置與iWoT Cloud保持連線的時間，詳細說明請參閱另一份教學文件，在此設定為60秒。<code>defaultProperties</code>是本裝置初始的Properties，在此填入pause開關的初始狀態。<br />
+初始化成功之後呼叫 <code>thing.connect()</code> 並傳入context與前一節準備的callback及handler。</p>
+
+<h3 id="indexjs">完整的 MainActivity.java 程式碼</h3>
+<pre><code>public class MainActivity extends AppCompatActivity implements SensorEventListener {
+
+    private Switch s_paused;
+    private boolean paused = false;
+    private TextView tv_x;
+    private TextView tv_y;
+    private TextView tv_z;
+    private SensorManager sManager;
+    private Sensor mSensorOrientation;
+
+    private Thing thing = null;
+    private boolean connected = false;
+    private int precision = 100;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensorOrientation = sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        sManager.registerListener(this, mSensorOrientation, SensorManager.SENSOR_DELAY_UI);
+
+        tv_x = (TextView) findViewById(R.id.tv_x);
+        tv_y = (TextView) findViewById(R.id.tv_y);
+        tv_z = (TextView) findViewById(R.id.tv_z);
+
+        s_paused = (Switch) findViewById(R.id.paused);
+        s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                paused = isChecked;
+                if (null != thing && connected) {
+                    Model.VarObject property = createSingleProperty(&quot;pause&quot;, &quot;paused&quot;, paused);
+                    thing.publishProperty(property, 0);
+                }
+            }
+        });
+
+
+        connectIWoT();
+    }
+    
+    private void connectIWoT() {
+        String modelJSON = &quot;{\&quot;id\&quot;:\&quot;iwot_android_thing_1\&quot;,\&quot;classID\&quot;:\&quot;iwot_android_thing_model\&quot;,\&quot;name\&quot;:\&quot;iWoT Android Thing\&quot;,\&quot;properties\&quot;:{\&quot;pause\&quot;:{\&quot;name\&quot;:\&quot;Pause or Resume Sensors\&quot;,\&quot;values\&quot;:{\&quot;paused\&quot;:{\&quot;type\&quot;:\&quot;boolean\&quot;}}}},\&quot;actions\&quot;:{\&quot;precision\&quot;:{\&quot;name\&quot;:\&quot;Set Precision\&quot;,\&quot;values\&quot;:{\&quot;decimal\&quot;:{\&quot;description\&quot;:\&quot;decimal places\&quot;,\&quot;type\&quot;:\&quot;integer\&quot;,\&quot;minValue\&quot;:0,\&quot;maxValue\&quot;:5,\&quot;required\&quot;:true}}}},\&quot;events\&quot;:{\&quot;orientation\&quot;:{\&quot;name\&quot;:\&quot;Orientation Sensor\&quot;,\&quot;values\&quot;:{\&quot;x\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;},\&quot;y\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;},\&quot;z\&quot;:{\&quot;type\&quot;:\&quot;float\&quot;}}}}}&quot;;
+        String host = &quot;192.168.22.3&quot;;
+        String accessKey = &quot;NhhUzHnodoEbleowIFupo7Dk&quot;;
+        String secretKey = &quot;9BF9w3d4WHJGfuoJjy-epSP9HbaVtgHBAgCE9g7is9kg_wv7&quot;;
+        int keepAlive = 60;
+        Model.VarObject defaultProperties = Model.parseVarObject(&quot;{\&quot;pause\&quot;:{\&quot;values\&quot;:{\&quot;paused\&quot;:false}}}&quot;);
+
+        Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
+        thing = new Thing();
+        if (!thing.init(config)) {
+            Log.v(&quot;[iWoT]&quot;, &quot;Fail to init iWoT SDK&quot;);
+            return;
+        }
+        thing.connect(getApplicationContext(), new Thing.IThingListener() {
+
+            @Override
+            public void onConnected() {
+                Log.v(&quot;[iWoT]&quot;, &quot;onConnected&quot;);
+                connected = true;
+            }
+
+            @Override
+            public void onDisconnected() {
+                Log.v(&quot;[iWoT]&quot;, &quot;onDisconnected&quot;);
+                connected = false;
+            }
+
+            @Override
+            public boolean onActions(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onActions: &quot; + var.identifier);
+                for (Model.VarGroup vg : var.groups) {
+                    if (&quot;precision&quot;.equals(vg.identifier)) {
+                        for (Model.VarItem vi : vg.items) {
+                            if (&quot;decimal&quot;.equals(vi.key)) {
+                                precision = (int) Math.pow(10, vi.numValue.intValue());
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onProperties(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onProperties: &quot; + var.identifier);
+
+                for (Model.VarGroup group : var.groups) {
+                    for (Model.VarItem item : group.items) {
+                        if (group.identifier.equals(&quot;pause&quot;) && item.key.equals(&quot;paused&quot;)) {
+                            s_paused.setChecked(item.boolValue);
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onSystem(Model.VarObject var) {
+                Log.v(&quot;iWoT&quot;, &quot;onSystem: &quot; + var.identifier);
+                return true;
+            }
+
+            @Override
+            public void onFailure(String s) {
+                Log.v(&quot;[iWoT]&quot;, &quot;onFailure: &quot; + s);
+            }
+        });
+    }
+
+    private Model.VarObject createSingleProperty(String property, String key, boolean enabled) {
+        ArrayList<Model.VarItem> items = new ArrayList<Model.VarItem>();
+        items.add(new Model.VarItem(key, new Boolean(enabled)));
+
+        ArrayList<Model.VarGroup> groups = new ArrayList<Model.VarGroup>();
+        groups.add(new Model.VarGroup(property, items, null, null, null));
+
+        return new Model.VarObject(&quot;properties&quot;, groups);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (!paused) {
+            float x = event.values[1];
+            float y = event.values[2];
+            float z = event.values[0];
+
+            if (connected) {
+                x = (float)Math.floor(x * precision) / precision;
+                y = (float)Math.floor(y * precision) / precision;
+                z = (float)Math.floor(z * precision) / precision;
+
+                String json = &quot;{\&quot;events\&quot;:{\&quot;orientation\&quot;:{\&quot;values\&quot;:{\&quot;x\&quot;:&quot; + x + &quot;,\&quot;y\&quot;:&quot; + y + &quot;,\&quot;z\&quot;:&quot; + z + &quot;}}}}&quot;;
+                Model.VarObject var = Model.parseVarObject(json);
+                if(false == thing.sendEvents(var, 0, true)) {
+                    Log.v(&quot;iWoT&quot;, &quot;fail to send events.&quot;);
+                }
+            }
+
+            tv_x.setText(&quot;X: &quot; + x);
+            tv_y.setText(&quot;Y: &quot; + y);
+            tv_z.setText(&quot;Z: &quot; + z);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+}
+</code></pre>
+
+<h2 id="_4">執行結果</h2>
+<img alt="執行畫面" src="https://justup.co/api/v2/file/c357189c-08e8-4870-94af-3cfb6a09c13a" /></p>
+
+<h3 id="iwot-cloud">與 iWoT Cloud 互動</h3>
+<p>登入 <a href="https://dev.iwot.io">iWoT</a>，可以看到此裝置已上線<br />
+<img alt="裝置已連線" src="https://justup.co/api/v2/file/392a843a-747b-48eb-8745-99ca416c90bb" /></p>
+<p>進入 Global Rule Engine<br />
+<img alt="進入規則引擎" src="http://i.imgur.com/HhIdXvL.png" /></p>
+<p>建立規則一，這個規則將來自裝置的 event -&gt; <code>orientation</code> 參數顯示在右方的 debug 頁籤中<br />
+<img alt="建立規則一" src="https://justup.co/api/v2/file/fe65175a-c900-49d2-8408-445f2f4ce5a0" /></p>
+<p>建立規則二，這個規則的作用是收到來自裝置的 property -&gt; <code>pause</code> 更新訊息時，將內容顯示在 debug 頁籤中<br />
+<img alt="建立規則二" src="https://justup.co/api/v2/file/69f7db29-0516-4343-aef1-f050a483a02b" /></p>
+<p>裝置端會送出 orientation 及 pause 更新訊息，因此 Global Rule Engine 將顯示以下訊息</p>
+<pre><code>2017/1/4 下午4:01:32b436ef92.00fc
+msg.payload : Object
+{ "x": 1.4, "y": -2, "z": 114.46 }
+2017/1/4 下午4:01:32b436ef92.00fc
+msg.payload : Object
+{ "x": 1.4, "y": -2.01, "z": 114.46 }
+2017/1/4 下午4:01:32b436ef92.00fc
+msg.payload : Object
+{ "x": 1.4, "y": -2.01, "z": 114.46 }
+2017/1/4 下午4:01:32b436ef92.00fc
+msg.payload : Object
+{ "x": 1.4, "y": -2.01, "z": 114.46 }
+2017/1/4 下午4:01:32b436ef92.00fc
+msg.payload : Object
+{ "paused": true }
+</code></pre>
+
+<p>接著建立規則三，測試 action handler<br />
+<img alt="建立規則三" src="https://justup.co/api/v2/file/c2d47e78-2dd5-4adb-b169-9e654580caeb" /><br />
+按下 <code>2</code>或是<code>4</code> 的 inject 元件後，iWoT 會呼叫裝置的 <code>onActions()</code>  並傳入 var 物件，其中 vi.numValue 參數值為 <code>2</code>或是<code>4</code>。依照 <code>onActions()</code> 的實作，會將Accelerometer數值顯示的精準度改為小數點下2位或是4位</p>
+<img alt="Set Precision" src="https://justup.co/api/v2/file/fc5df950-bca5-4040-8fed-5c60775b706d" /><br />
+
+<p>建立規則四，測試設定 property<br />
+<img alt="建立規則四" src="https://justup.co/api/v2/file/302ccf9a-47e5-4e15-a9bc-1a06040a888b" /><br />
+按下 <code>true</code>或是<code>false</code> 的 inject 元件後，iWoT 會呼叫裝置的 <code>onProperties()</code>  並傳入 var 物件，其中 item.boolValue 參數值為 <code>true</code>或是<code>false</code>。依照 <code>onProperties()</code> 的實作，會將pause的開關設定為開或是關，另外，也會暫停或是開始發送Accelerometer的數值到iWoT</p>
+
+<img alt="Pause Resume" src="https://justup.co/api/v2/file/006d22b0-e407-4532-884d-7d61611fcaa2" /><br />
+
+<h2 id="_5">常見問題</h2>
+<h4 id="event-connect">在iWoT Cloud看不到此裝置</h4>
+<p>請核對 <code>accessKey</code> 及 <code>secretKey</code> 是否正確，並確認 <code>host</code> 指向正確位址。</p>
+<h4 id="global-rule-engine-debug">Global Rule Engine 的 debug 頁籤沒有顯示預期中的資料</h4>
+<p>確認規則一與規則二的 iWoT Android Thing 元件已依照上述教學文件正確設定。請注意規則二，因為是 property changed 事件，必須選擇 Apply To one thing 並指定 iwot_android_thing_1。</p>
+<h4 id="inject">按下規則三或規則四的 inject 元件，裝置端沒有對應的輸出</h4>
+<p>確認規則三與規則四的 iWoT Android Thing 元件已依照上述教學文件正確設定。請注意規則四，因為是 set property 動作，必須選擇 Apply To one thing 並指定 iwot_android_thing_1。</p>
+    </div>
+  </div>
+</body>
+</html>
