@@ -475,3 +475,9 @@ tutorial/iwot/node\_modules/\* 並在 tutorial/iwot/ 目錄重新執行
 元件已依照上述教學文件正確設定。請注意規則四，因為是 set property
 動作，必須選擇 Apply To one thing 並指定 iwot\_thing\_1。
 
+.. |裝置已連線| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/1.png
+.. |進入規則引擎| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/2.png
+.. |建立規則一| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/3.png
+.. |建立規則二| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/4.png
+.. |建立規則三| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/5.png
+.. |建立規則四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/nodejs_sdk/images/6.png
