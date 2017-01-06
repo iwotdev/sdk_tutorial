@@ -1,18 +1,13 @@
 iWoT Javascript Web Browser SDK 入門教學
 ========================================
 
-iWoT Device SDK 協助開發者快速地將硬體裝置連接到
-iWoT。該套件實作了完整的 iWoT
-通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配
-iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。此範例使用 iWoT
-Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動。
+iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套件實作了完整的 iWoT 通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配 iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。此範例使用 iWoT Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動。
 
 準備開發環境
 ------------
 
-1. 下載 `iWoT Web SDK <http://dev.iwot.io/#/web/sdks>`__
-2. 取得\ `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`__
-   (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
+1. 下載 `iWoT Web SDK <http://dev.iwot.io/#/web/sdks>`_
+2. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
 3. 建立目錄結構
 
 ::
@@ -48,8 +43,9 @@ Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動
 準備 Web Thing Model
 ~~~~~~~~~~~~~~~~~~~~
 
-| 每一個 iWoT 裝置都會對應到一個 Web Thing Model，用來描述此裝置的能力。
-| 本範例的 model 如下：
+每一個 iWoT 裝置都會對應到一個 Web Thing Model，用來描述此裝置的能力。
+
+本範例的 model 如下：
 
 ::
 
@@ -93,10 +89,8 @@ Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動
 
 本網頁範例中的裝置：
 
--  具有三個 ``properties`` -> r / g / b，代表三種顏色，最大值為
-   255，最小值為 0。
--  可以接收一個 ``action`` ->
-   brightness，包含一個傳入數值，代表亮度，最大值為 1，最小值為 0。
+-  具有三個 ``properties`` -> r / g / b，代表三種顏色，最大值為 255，最小值為 0。
+-  可以接收一個 ``action`` -> brightness，包含一個傳入數值，代表亮度，最大值為 1，最小值為 0。
 
 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
 
@@ -125,24 +119,16 @@ Web SDK 實作一個 Ball 網頁，說明如何透過 iWoT 和這個網頁互動
         console.log('event: connect');
     });
 
-當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些
-callback 取得目前的連線狀態。\ *網路斷線時 SDK
-會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。*
+當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些 callback 取得目前的連線狀態。 *網路斷線時 SDK 會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。*
 
 確認收到 ``connect callback`` 之後就可開始與 iWoT 的訊息傳遞。
 
 實作透過 UI 更新 property 至 iWoT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| 為了要透過 UI 控制 property R / G / B，必須先建置
-  ``ball.html``\ ，撰寫 ``<div id="ball"></div>`` 來產生一個 2D 球形的
-  UI。
-| 在操控 UI 方面則透過 input [ type = "range" ]
-  元素進行操控，並依照顏色設定最小值為 0，最大值為 255，間距為 1
-  ，且分別命名為不同的 id 方便操控，最後加上
-  ``onchange="changeColor(this.id)"``
-  來觸發此元件的改變顏色事件，並在此函式中透過
-  ``thing.publishProperties(...)`` 傳遞數值至 iWoT。
+為了要透過 UI 控制 property R / G / B，必須先建置 ``ball.html``，撰寫 ``<div id="ball"></div>`` 來產生一個 2D 球形的 UI。
+
+在操控 UI 方面則透過 input [ type = "range" ] 元素進行操控，並依照顏色設定最小值為 0，最大值為 255，間距為 1，且分別命名為不同的 id 方便操控，最後加上 ``onchange="changeColor(this.id)"`` 來觸發此元件的改變顏色事件，並在此函式中透過 ``thing.publishProperties(...)`` 傳遞數值至 iWoT。
 
 ::
 
@@ -198,9 +184,7 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
 實作透過 iWoT 來接收 action 改變亮度
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-要讓網頁接收從 iWoT 送出的訊息，需撰寫 action handler
-進行後續的處理工作，本範例會針對此裝置的亮度進行調整，訊息方向由 iWoT
-的規則引擎傳遞至本範例的裝置上。
+要讓網頁接收從 iWoT 送出的訊息，需撰寫 action handler 進行後續的處理工作，本範例會針對此裝置的亮度進行調整，訊息方向由 iWoT 的規則引擎傳遞至本範例的裝置上。
 
 ::
 
@@ -213,18 +197,12 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
         }
     }
 
-當外部呼叫 action 時，會交給 ``action handler`` 去處理。所有的 action
-都交由同一個 ``action handler`` 處理，因此要判別觸發哪一個 action
-，透過判別式 ``if(action.brightness !== undefined)`` 來確認是否為
-``brightness`` 的 action
-，收到後可以取得傳入值：\ ``action.brightness.values.bright``
-，最後必須呼叫 ``done()`` 通知 iWoT 此 action 已執行完畢。
+當外部呼叫 action 時，會交給 ``action handler`` 去處理。所有的 action 都交由同一個 ``action handler`` 處理，因此要判別觸發哪一個 action ，透過判別式 ``if(action.brightness !== undefined)`` 來確認是否為 ``brightness`` 的 action ，收到後可以取得傳入值： ``action.brightness.values.bright`` ，最後必須呼叫 ``done()`` 通知 iWoT 此 action 已執行完畢。
 
 初始化並建立連線
 ~~~~~~~~~~~~~~~~
 
-上述的 model、callback 和相關 handler
-準備好之後就可以進行初始化並建立連線
+上述的 model、callback 和相關 handler 準備好之後就可以進行初始化並建立連線
 
 ::
 
@@ -241,12 +219,9 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
         }
     });
 
-| ``accessKey`` 跟 ``secretKey``
-  請填入一開始準備開發環境時取得的\_開發者金鑰\_。\ ``host`` 預設為
-  *dev.iwot.io*\ ，如果您使用的 iWoT
-  為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
-| 初始化成功之後呼叫 ``thing.connect()`` 並傳入前一節準備的 action
-  handler。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io* ，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+
+初始化成功之後呼叫 ``thing.connect()`` 並傳入前一節準備的 action handler。
 
 完整的 ball.html 程式碼
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -450,21 +425,20 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
 運行本地端伺服器並開啟網頁
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-本範例需透過本地端伺服器開啟
-``ball.html``\ ，開啟網頁後如下圖所呈現的畫面： |ball預設呈現畫面|
+本範例需透過本地端伺服器開啟 ``ball.html``，開啟網頁後如下圖所呈現的畫面：
+|ball預設呈現畫面|
 
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-| 登入 `iWoT <https://dev.iwot.io>`__\ ，可以看到此裝置已上線
-| |裝置已連線|
+登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+|裝置已連線|
 
-| 進入 Global Rule Engine
-| |進入規則引擎|
+進入 Global Rule Engine
+|進入規則引擎|
 
-建立規則一，設定裝置當 ``property r`` 有更新時就顯示在 debug
-頁籤上。debug 頁籤在 Rule Engine 畫面右邊。
-規則若有任何調整，需按下部署按鈕，異動過的規則才會生效。 |建立規則一|
+建立規則一，設定裝置當 ``property r`` 有更新時就顯示在 debug 頁籤上。debug 頁籤在 Rule Engine 畫面右邊。規則若有任何調整，需按下部署按鈕，異動過的規則才會生效。
+|建立規則一|
 
 建立規則二，同規則一的操作方式，顯示 ``property g`` 值在 debug 頁籤上。
 |建立規則二|
@@ -472,9 +446,10 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
 建立規則三，同規則一的操作方式，顯示 ``property b`` 值在 debug 頁籤上。
 |建立規則三|
 
-| 建立規則四，測試 ``action brightness``\ 。 |建立規則四|
-| 按下 inject 元件後，iWoT 呼叫 ``actionHandler()`` 並傳入 action
-  物件，其中 bright 參數值為 ``0.2``\ ，並將球的亮度調整為此數值。
+建立規則四，測試 ``action brightness``。
+|建立規則四|
+
+按下 inject 元件後，iWoT 呼叫 ``actionHandler()`` 並傳入 action 物件，其中 bright 參數值為 ``0.2``，並將球的亮度調整為此數值。
 
 常見問題
 --------
@@ -482,14 +457,8 @@ callback 取得目前的連線狀態。\ *網路斷線時 SDK
 操控 Web UI 改變球的 r / g / b 顏色，debug tab 沒有顯示相對應數值
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-確認規則一至三是否已照上次教學文件正確設定。請注意，因為是 property
-changed 事件，必須選擇 Apply To one thing 並指定
-iWoT\_Ball\_1。如正常輸出數值應呈現如下圖：
-
-.. figure:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/8.png
-   :alt: debug tab 輸出範本
-
-   debug tab 輸出範本
+確認規則一至三是否已照上次教學文件正確設定。請注意，因為是 property changed 事件，必須選擇 Apply To one thing 並指定 iWoT\_Ball\_1。如正常輸出數值應呈現如下圖：
+|輸出範本|
 
 按下規則四中的 inject 元件，網頁上的球沒有呈現相對應的亮度變化
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -503,4 +472,5 @@ iWoT\_Ball\_1。如正常輸出數值應呈現如下圖：
 .. |建立規則二| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/5.png
 .. |建立規則三| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/6.png
 .. |建立規則四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/7.png
+.. |輸出範本| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/web_sdk/images/8.png
 
