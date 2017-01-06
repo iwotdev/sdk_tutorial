@@ -4,11 +4,16 @@ iWoT Device SDK for Node.JS 入門教學
 iWoT Device SDK 協助開發者快速地將硬體裝置連接到
 iWoT。該套件實作了完整的 iWoT
 通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配
-iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。 ## 準備開發環境
-1. 安裝 `Node.JS <https://nodejs.org/en/download/>`__ 2. 下載並解壓縮
-`iWoT Node.JS SDK <http://dev.iwot.io/#/web/sdks>`__ 3.
-取得\ `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`__
-(在金鑰上按下滑鼠左鍵可複製到剪貼簿) 4. 建立目錄結構
+iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
+
+準備開發環境
+------------
+
+1. 安裝 `Node.JS <https://nodejs.org/en/download/>`__
+2. 下載並解壓縮 `iWoT Node.JS SDK <http://dev.iwot.io/#/web/sdks>`__
+3. 取得\ `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`__
+   (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
+4. 建立目錄結構
 
 ::
 
@@ -83,15 +88,17 @@ iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
    通常代表裝置的狀態，在本範例中我們宣告了一個變數用來對應這個
    property：
 
-   ::
+::
 
-       var property_b = false;
+    var property_b = false;
 
 -  可以接受一個 action -> ``action1``\ ，包含一個字串型態的傳入值
 -  具有發出一個 event -> ``event1`` 的能力，附帶一個整數值
 
-有關 Web Thing Model 的詳細說明請參閱另一份教學文件。 ### 準備 SDK
-callback
+有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
+
+準備 SDK callback
+~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -118,10 +125,14 @@ callback
 
 當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些
 callback 取得目前的連線狀態。\ *網路斷線時 SDK
-會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。* ###
-實作發送 event 及更新 property 至 iWoT 在收到 ``connect`` callback
-之後就可以開始與 iWoT 的訊息傳遞。本範例將發送 event 及更新 property
-直接實作在 ``connect`` callback 中：
+會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。*
+
+實作發送 event 及更新 property 至 iWoT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在收到 ``connect`` callback 之後就可以開始與 iWoT
+的訊息傳遞。本範例將發送 event 及更新 property 直接實作在 ``connect``
+callback 中：
 
 ::
 
@@ -179,7 +190,11 @@ changed 通知 iWoT shadow device。上述程式碼實作了後者，每 6 秒�
 
 其中 delta 參數為 property 內容，同樣的，這個 property
 必須包含在此裝置的 model 當中。如果有多個 property，delta
-可以只包含其中一個或部分 property。 ### 撰寫 action/properties handler
+可以只包含其中一個或部分 property。
+
+撰寫 action/properties handler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 如果 model 中定義了 action，我們還必須實作 action handler，當外部呼叫此
 action 時會交由對應的 action handler 處理。
 
@@ -217,9 +232,13 @@ property 的需求，則必須實作 properties handler。
   處理，因此必須先判斷要設定的 property
   是哪一個：\ ``if (property.property1 !== undefined) {...}``\ 。設定值可以由
   ``property.property1.values.b`` 取得。
-| 最後也必須呼叫 ``done()`` 通知 iWoT 該 property 已設定完畢。 ###
-  初始化並建立連線 上述的 model、callback 和相關 handler
-  準備好之後就可以進行初始化並建立連線
+| 最後也必須呼叫 ``done()`` 通知 iWoT 該 property 已設定完畢。
+
+初始化並建立連線
+~~~~~~~~~~~~~~~~
+
+上述的 model、callback 和相關 handler
+準備好之後就可以進行初始化並建立連線
 
 ::
 
@@ -242,7 +261,9 @@ property 的需求，則必須實作 properties handler。
   *dev.iwot.io*\ ，如果您使用的 iWoT
   為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
 | 初始化成功之後呼叫 ``thing.connect()`` 並傳入前一節準備的 handler。
-  ### 完整的 index.js 程式碼
+
+完整的 index.js 程式碼
+~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
