@@ -411,3 +411,47 @@ property 的需求，則必須實作 properties handler。
 
 裝置端每 3 秒及 6 秒會分別送出 event1 及 property1 更新訊息，因此 Global
 Rule Engine 將顯示以下訊息
+
+::
+
+    2016/12/19 下午1:33:274cd1f7b6.ea5e58
+    msg.payload : number
+    0
+    2016/12/19 下午1:33:304cd1f7b6.ea5e58
+    msg.payload : number
+    1
+    2016/12/19 下午1:33:3086887d28.0ec3a
+    msg.payload : boolean
+    true
+    2016/12/19 下午1:33:334cd1f7b6.ea5e58
+    msg.payload : number
+    2
+    2016/12/19 下午1:33:3686887d28.0ec3a
+    msg.payload : boolean
+    false
+    2016/12/19 下午1:33:364cd1f7b6.ea5e58
+    msg.payload : number
+    3
+    2016/12/19 下午1:33:394cd1f7b6.ea5e58
+    msg.payload : number
+    4
+
+| 接著建立規則三，測試 action handler
+| |建立規則三|
+| 按下 ``test string`` 的 inject 元件後，iWoT 會呼叫裝置的
+  ``actionHandler()`` 並傳入 action1 物件，其中 s 參數值為
+  ``test string``\ 。觀察裝置端的輸出。依照 ``actionHandler()``
+  的實作，會顯示 ``console.log()`` 訊息
+
+::
+
+    received action -> {"action1":{"values":{"s":"test string"}}}
+
+| 建立規則四，測試設定 property
+| |建立規則四|
+| 按下 ``true`` 的 inject 元件後，iWoT 呼叫 ``propertiesHandler()``
+  並傳入 property1 物件，其中 b 參數值為 ``true``\ 。裝置端輸出為
+
+::
+
+    property changed -> {"property1":{"values":{"b":true}}}
