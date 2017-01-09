@@ -864,7 +864,7 @@ action 時會交由對應的 action handler 處理。
 下載鏈結
 --------
 
-可以到以下 `鏈結 <https://justup.co/share.html?id=d036f824-3c22-431a-9e12-3a80b71a41e9>`_ 下載專案相關檔案。
+可以到以下 `鏈結 <./files>`_ 下載專案相關檔案。
 
 RTOS SDK : esp8266\_rtos\_sdk\_1.4.x.tar.gz
 
