@@ -13,9 +13,11 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 LED 傳感器一枚
 
 杜邦線 x 2
+
 |1|
 
 電路示意圖
+
 |2|
 
 準備開發環境
@@ -849,20 +851,27 @@ action 時會交由對應的 action handler 處理。
 ~~~~~~~~~~~~~~~~~~
 
 登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+
 |4|
 
 以及我們 Actions 的設定
+
 |5|
 
 進入 Global Rule Engine
+
 |6|
 
 建立規則一 (esp8266)，測試 action :
+
 |7|
+
 |8|
 
 分別按下 On/Off 的 inject 元件後，iWoT 會呼叫裝置的 actionHandler() 並傳入 switch 物件，其中 ledState參數值為 0 or 1。觀察裝置端的輸出。依照 actionHandler() 的實作，會顯示在 LED 的明暗上。
+
 |9|
+
 |10|
 
 下載鏈結

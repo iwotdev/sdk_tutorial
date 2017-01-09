@@ -601,15 +601,19 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
 ~~~~~~~~~~~~~~~~~~
 
 登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+
 |裝置已連線|
 
 進入 Global Rule Engine
+
 |進入規則引擎|
 
 建立規則一，這個規則將來自裝置的 event -> ``orientation`` 參數顯示在右方的 debug 頁籤中
+
 |建立規則一|
 
 建立規則二，這個規則的作用是收到來自裝置的 property -> ``pause`` 更新訊息時，將內容顯示在 debug 頁籤中
+
 |建立規則二|
 
 裝置端會送出 orientation 及 pause 更新訊息，因此 Global Rule Engine 將顯示以下訊息
@@ -633,15 +637,19 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
     { "paused": true }
 
 接著建立規則三，測試 action handler
+
 |建立規則三|
 
 按下 ``2`` 或是 ``4`` 的 inject 元件後，iWoT 會呼叫裝置的 ``onActions()`` 並傳入 var 物件，其中 vi.numValue 參數值為 ``2`` 或是 ``4`` 。依照 ``onActions()`` 的實作，會將 Accelerometer 數值顯示的精準度改為小數點下 2 位或是 4 位
+
 |Set Precision|
 
 建立規則四，測試設定 property
+
 |建立規則四|
 
 按下 ``true`` 或是\ ``false`` 的 inject 元件後，iWoT 會呼叫裝置的 ``onProperties()`` 並傳入 var 物件，其中 item.boolValue 參數值為 ``true``\ 或是\ ``false``\ 。依照 ``onProperties()`` 的實作，會將pause的開關設定為開或是關，另外，也會暫停或是開始發送Accelerometer的數值到iWoT
+
 |Pause Resume|
 
 常見問題

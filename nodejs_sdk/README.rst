@@ -385,15 +385,19 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
 ~~~~~~~~~~~~~~~~~~
 
 登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+
 |裝置已連線|
 
 進入 Global Rule Engine
+
 |進入規則引擎|
 
 建立規則一，這個規則將來自裝置的 event1 參數顯示在右方的 debug 頁籤中
+
 |建立規則一|
 
 建立規則二，這個規則的作用是收到來自裝置的 property1 更新訊息時，將內容顯示在 debug 頁籤中
+
 |建立規則二|
 
 裝置端每 3 秒及 6 秒會分別送出 event1 及 property1 更新訊息，因此 Global Rule Engine 將顯示以下訊息
@@ -423,6 +427,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
     4
 
 接著建立規則三，測試 action handler
+
 |建立規則三|
 按下 ``test string`` 的 inject 元件後，iWoT 會呼叫裝置的 ``actionHandler()`` 並傳入 action1 物件，其中 s 參數值為 ``test string``。觀察裝置端的輸出。依照 ``actionHandler()`` 的實作，會顯示 ``console.log()`` 訊息
 
@@ -431,7 +436,9 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
     received action -> {"action1":{"values":{"s":"test string"}}}
 
 建立規則四，測試設定 property
+
 |建立規則四|
+
 按下 ``true`` 的 inject 元件後，iWoT 呼叫 ``propertiesHandler()`` 並傳入 property1 物件，其中 ``b`` 參數值為 ``true``。裝置端輸出為
 
 ::
