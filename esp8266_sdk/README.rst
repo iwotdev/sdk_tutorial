@@ -125,7 +125,7 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 並放置於 libraries/
 
-(或由`此 <./files`_ 下載)
+(或由 `此 <./files`_ 下載)
 
 建立目錄結構
 
@@ -153,359 +153,359 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 ::
 
-	############################ Modify Block
-	# name for the target project !
-	LIB		= ../lib/libiwot.a
-	# which modules (subdirectories) of the project to include in compiling
-	MODULES		= .
-	EXTRA_INCDIR	= . ../libraries/jsmn ../libraries/paho_mqtt_client_embedded_c
-	# various paths from the SDK used in this project
-	SDK_LIBDIR	= lib
-	SDK_LDDIR	= ld
-	############################
+    ############################ Modify Block
+    # name for the target project !
+    LIB        = ../lib/libiwot.a
+    # which modules (subdirectories) of the project to include in compiling
+    MODULES        = .
+    EXTRA_INCDIR    = . ../libraries/jsmn ../libraries/paho_mqtt_client_embedded_c
+    # various paths from the SDK used in this project
+    SDK_LIBDIR    = lib
+    SDK_LDDIR    = ld
+    ############################
 
-	# Directory the Makefile is in. Please don't include other Makefiles before this.
-	THISDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-	#For FreeRTOS
-	FREERTOS ?= yes
-	# Output directors to store intermediate compiled files
-	# relative to the project directory
-	BUILD_BASE	= build
-	# Base directory for the compiler. Needs a / at the end; if not set it'll use the tools that are in
-	# the PATH.
-	XTENSA_TOOLS_ROOT ?= 
-	# Base directory of the ESP8266 FreeRTOS SDK package, absolute
-	# Only used for the FreeRTOS build
-	SDK_PATH	?= /opt/Espressif/ESP8266_RTOS_SDK
+    # Directory the Makefile is in. Please don't include other Makefiles before this.
+    THISDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+    #For FreeRTOS
+    FREERTOS ?= yes
+    # Output directors to store intermediate compiled files
+    # relative to the project directory
+    BUILD_BASE    = build
+    # Base directory for the compiler. Needs a / at the end; if not set it'll use the tools that are in
+    # the PATH.
+    XTENSA_TOOLS_ROOT ?= 
+    # Base directory of the ESP8266 FreeRTOS SDK package, absolute
+    # Only used for the FreeRTOS build
+    SDK_PATH    ?= /opt/Espressif/ESP8266_RTOS_SDK
 
-	# compiler flags using during compilation of source files
-	CFLAGS		= -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-inline-functions \
-				-nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH -mforce-l32 \
-				-Wno-address -Wno-format-contains-nul -DESP8266 -Wno-unused -Wno-pointer-sign \
-				-DFREERTOS -DLWIP_OPEN_SRC -ffunction-sections -fdata-sections \
-				-DESP8266
+    # compiler flags using during compilation of source files
+    CFLAGS        = -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-inline-functions \
+                -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH -mforce-l32 \
+                -Wno-address -Wno-format-contains-nul -DESP8266 -Wno-unused -Wno-pointer-sign \
+                -DFREERTOS -DLWIP_OPEN_SRC -ffunction-sections -fdata-sections \
+                -DESP8266
 
-	SDK_INCDIR	= include \
-				include/freertos \
-				include/espressif/esp8266 \
-				include/espressif \
-				extra_include \
-				include/lwip \
-				include/lwip/lwip \
-				include/lwip/ipv4 \
-				include/lwip/ipv6 \
-					include/spiffs      
+    SDK_INCDIR    = include \
+                include/freertos \
+                include/espressif/esp8266 \
+                include/espressif \
+                extra_include \
+                include/lwip \
+                include/lwip/lwip \
+                include/lwip/ipv4 \
+                include/lwip/ipv6 \
+                    include/spiffs      
 
-	SDK_INCDIR	:= $(addprefix -I$(SDK_PATH)/,$(SDK_INCDIR))
+    SDK_INCDIR    := $(addprefix -I$(SDK_PATH)/,$(SDK_INCDIR))
 
-	TOOLPREFIX	=xtensa-lx106-elf-
+    TOOLPREFIX    =xtensa-lx106-elf-
 
-	# select which tools to use as compiler, librarian and linker
-	CC		:= $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
-	AR		:= $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)ar
-	LD		:= $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
-	OBJCOPY	:= $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)objcopy
+    # select which tools to use as compiler, librarian and linker
+    CC        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
+    AR        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)ar
+    LD        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
+    OBJCOPY    := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)objcopy
 
-	####
-	#### no user configurable options below here
-	####
-	SRC_DIR		:= $(MODULES)
-	BUILD_DIR	:= $(addprefix $(BUILD_BASE)/,$(MODULES))
+    ####
+    #### no user configurable options below here
+    ####
+    SRC_DIR        := $(MODULES)
+    BUILD_DIR    := $(addprefix $(BUILD_BASE)/,$(MODULES))
 
-	SRC		:= $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
-	OBJ		:= $(patsubst %.c,$(BUILD_BASE)/%.o,$(SRC))
+    SRC        := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
+    OBJ        := $(patsubst %.c,$(BUILD_BASE)/%.o,$(SRC))
 
-	INCDIR	:= $(addprefix -I,$(SRC_DIR))
-	EXTRA_INCDIR	:= $(addprefix -I,$(EXTRA_INCDIR))
-	MODULE_INCDIR	:= $(addsuffix /include,$(INCDIR))
+    INCDIR    := $(addprefix -I,$(SRC_DIR))
+    EXTRA_INCDIR    := $(addprefix -I,$(EXTRA_INCDIR))
+    MODULE_INCDIR    := $(addsuffix /include,$(INCDIR))
 
-	V ?= $(VERBOSE)
-	ifeq ("$(V)","1")
-	Q :=
-	vecho := @true
-	else
-	Q := @
-	vecho := @echo
-	endif
+    V ?= $(VERBOSE)
+    ifeq ("$(V)","1")
+    Q :=
+    vecho := @true
+    else
+    Q := @
+    vecho := @echo
+    endif
 
-	vpath %.c $(SRC_DIR)
+    vpath %.c $(SRC_DIR)
 
-	define compile-objects
-	$1/%.o: %.c
-		$(vecho) "CC $$<"
-		$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
-	endef
+    define compile-objects
+    $1/%.o: %.c
+        $(vecho) "CC $$<"
+        $(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
+    endef
 
-	.PHONY: all checkdirs clean 
+    .PHONY: all checkdirs clean 
 
-	all: checkdirs $(LIB) 
+    all: checkdirs $(LIB) 
 
-	$(LIB): $(BUILD_DIR) $(OBJ)
-		$(vecho) "AR $@"
-		$(Q) $(AR) cru $@ $(OBJ)
+    $(LIB): $(BUILD_DIR) $(OBJ)
+        $(vecho) "AR $@"
+        $(Q) $(AR) cru $@ $(OBJ)
 
-	checkdirs: $(BUILD_DIR)
+    checkdirs: $(BUILD_DIR)
 
-	$(BUILD_DIR):
-		$(Q) mkdir -p $@
+    $(BUILD_DIR):
+        $(Q) mkdir -p $@
 
-	clean:
-		$(Q) rm -f $(LIB)
-		$(Q) find $(BUILD_BASE) -type f | xargs rm -f
-		$(Q) rm -rf $(FW_BASE)
+    clean:
+        $(Q) rm -f $(LIB)
+        $(Q) find $(BUILD_BASE) -type f | xargs rm -f
+        $(Q) rm -rf $(FW_BASE)
 
 
-	$(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
+    $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
 
 以下為 jsmn Makefile 修改處
 
 ::
 
-	############################ Modify Block
-	# name for the target project !
-	LIB		= ../../lib/libjsmn.a
-	# which modules (subdirectories) of the project to include in compiling
-	MODULES		= .
-	EXTRA_INCDIR	= .  
-	# various paths from the SDK used in this project
-	SDK_LIBDIR	= lib
-	SDK_LDDIR	= ld
-	############################
+    ############################ Modify Block
+    # name for the target project !
+    LIB        = ../../lib/libjsmn.a
+    # which modules (subdirectories) of the project to include in compiling
+    MODULES        = .
+    EXTRA_INCDIR    = .  
+    # various paths from the SDK used in this project
+    SDK_LIBDIR    = lib
+    SDK_LDDIR    = ld
+    ############################
 
 以下為 paho\_mqtt\_client\_embedded\_c Makefile 修改處
 
 ::
 
-	############################ Modify Block
-	# name for the target project !
-	LIB		= ../../lib/libpaho_mqtt_client.a
-	# which modules (subdirectories) of the project to include in compiling
-	MODULES		= .
-	EXTRA_INCDIR	= .  
-	# various paths from the SDK used in this project
-	SDK_LIBDIR	= lib
-	SDK_LDDIR	= ld
-	############################
+    ############################ Modify Block
+    # name for the target project !
+    LIB        = ../../lib/libpaho_mqtt_client.a
+    # which modules (subdirectories) of the project to include in compiling
+    MODULES        = .
+    EXTRA_INCDIR    = .  
+    # various paths from the SDK used in this project
+    SDK_LIBDIR    = lib
+    SDK_LDDIR    = ld
+    ############################
 
 以下為 user Makefile 完整檔案
 
 ::
 
-	#############################################################
-	# Required variables for each makefile
-	# Discard this section from all parent makefiles
-	# Expected variables (with automatic defaults):
-	#   CSRCS (all "C" files in the dir)
-	#   SUBDIRS (all subdirs with a Makefile)
-	#   GEN_LIBS - list of libs to be generated ()
-	#   GEN_IMAGES - list of images to be generated ()
-	#   COMPONENTS_xxx - a list of libs/objs in the form
-	#     subdir/lib to be extracted and rolled up into
-	#     a generated lib/image xxx.a ()
-	#
-	ifndef PDIR
-	GEN_LIBS = libuser.a
-	endif
+    #############################################################
+    # Required variables for each makefile
+    # Discard this section from all parent makefiles
+    # Expected variables (with automatic defaults):
+    #   CSRCS (all "C" files in the dir)
+    #   SUBDIRS (all subdirs with a Makefile)
+    #   GEN_LIBS - list of libs to be generated ()
+    #   GEN_IMAGES - list of images to be generated ()
+    #   COMPONENTS_xxx - a list of libs/objs in the form
+    #     subdir/lib to be extracted and rolled up into
+    #     a generated lib/image xxx.a ()
+    #
+    ifndef PDIR
+    GEN_LIBS = libuser.a
+    endif
 
-	#############################################################
-	# Configuration i.e. compile options etc.
-	# Target specific stuff (defines etc.) goes in here!
-	# Generally values applying to a tree are captured in the
-	#   makefile at its root level - these are then overridden
-	#   for a subtree within the makefile rooted therein
-	#
-	#DEFINES += 
-	DEFINES += -DSPIFFS_HAL_CALLBACK_EXTRA=false -DSPIFFS_FILEHDL_OFFSET=true -DLOG_STR_CONST_ATTR="__attribute__((aligned(4))) __attribute__((section(\".irom.text\")))" -mforce-l32
+    #############################################################
+    # Configuration i.e. compile options etc.
+    # Target specific stuff (defines etc.) goes in here!
+    # Generally values applying to a tree are captured in the
+    #   makefile at its root level - these are then overridden
+    #   for a subtree within the makefile rooted therein
+    #
+    #DEFINES += 
+    DEFINES += -DSPIFFS_HAL_CALLBACK_EXTRA=false -DSPIFFS_FILEHDL_OFFSET=true -DLOG_STR_CONST_ATTR="__attribute__((aligned(4))) __attribute__((section(\".irom.text\")))" -mforce-l32
 
-	#############################################################
-	# Recursion Magic - Don't touch this!!
-	#
-	# Each subtree potentially has an include directory
-	#   corresponding to the common APIs applicable to modules
-	#   rooted at that subtree. Accordingly, the INCLUDE PATH
-	#   of a module can only contain the include directories up
-	#   its parent path, and not its siblings
-	#
-	# Required for each makefile to inherit from the parent
-	#
+    #############################################################
+    # Recursion Magic - Don't touch this!!
+    #
+    # Each subtree potentially has an include directory
+    #   corresponding to the common APIs applicable to modules
+    #   rooted at that subtree. Accordingly, the INCLUDE PATH
+    #   of a module can only contain the include directories up
+    #   its parent path, and not its siblings
+    #
+    # Required for each makefile to inherit from the parent
+    #
 
-	INCLUDES := $(INCLUDES) -I $(PDIR)include
-	INCLUDES += -I ./  -I ../iwot
-	PDIR := ../$(PDIR)
-	sinclude $(PDIR)Makefile
+    INCLUDES := $(INCLUDES) -I $(PDIR)include
+    INCLUDES += -I ./  -I ../iwot
+    PDIR := ../$(PDIR)
+    sinclude $(PDIR)Makefile
 
 在 tutorial 專案資料夾下的 Makefile 需要將我們用到的模組設定加進去的地方有 lib/libjsmn.a、lib/libpaho\_mqtt\_client.a、lib/iwot.a、LINKFLAGS\_eagle.app.v6、DEPENDS\_eagle.app.v6。
 
 ::
 
-	#############################################################
-	# Required variables for each makefile
-	# Discard this section from all parent makefiles
-	# Expected variables (with automatic defaults):
-	#   CSRCS (all "C" files in the dir)
-	#   SUBDIRS (all subdirs with a Makefile)
-	#   GEN_LIBS - list of libs to be generated ()
-	#   GEN_IMAGES - list of object file images to be generated ()
-	#   GEN_BINS - list of binaries to be generated ()
-	#   COMPONENTS_xxx - a list of libs/objs in the form
-	#     subdir/lib to be extracted and rolled up into
-	#     a generated lib/image xxx.a ()
-	#
-	TARGET = eagle
-	#FLAVOR = release
-	FLAVOR = debug
+    #############################################################
+    # Required variables for each makefile
+    # Discard this section from all parent makefiles
+    # Expected variables (with automatic defaults):
+    #   CSRCS (all "C" files in the dir)
+    #   SUBDIRS (all subdirs with a Makefile)
+    #   GEN_LIBS - list of libs to be generated ()
+    #   GEN_IMAGES - list of object file images to be generated ()
+    #   GEN_BINS - list of binaries to be generated ()
+    #   COMPONENTS_xxx - a list of libs/objs in the form
+    #     subdir/lib to be extracted and rolled up into
+    #     a generated lib/image xxx.a ()
+    #
+    TARGET = eagle
+    #FLAVOR = release
+    FLAVOR = debug
 
-	#EXTRA_CCFLAGS += -u
+    #EXTRA_CCFLAGS += -u
 
-	ifndef PDIR # {
-	GEN_IMAGES= eagle.app.v6.out
-	GEN_BINS= eagle.app.v6.bin
-	SPECIAL_MKTARGETS=$(APP_MKTARGETS)
-	SUBDIRS=    \
-		user    \
-		driver  
-		
-	endif # } PDIR
+    ifndef PDIR # {
+    GEN_IMAGES= eagle.app.v6.out
+    GEN_BINS= eagle.app.v6.bin
+    SPECIAL_MKTARGETS=$(APP_MKTARGETS)
+    SUBDIRS=    \
+        user    \
+        driver  
+        
+    endif # } PDIR
 
-	LDDIR = $(SDK_PATH)/ld
+    LDDIR = $(SDK_PATH)/ld
 
-	CCFLAGS += -Os
+    CCFLAGS += -Os
 
-	TARGET_LDFLAGS =		\
-		-nostdlib		\
-		-Wl,-EL \
-		--longcalls \
-		--text-section-literals \
-		--force-l32
+    TARGET_LDFLAGS =        \
+        -nostdlib        \
+        -Wl,-EL \
+        --longcalls \
+        --text-section-literals \
+        --force-l32
 
-	ifeq ($(FLAVOR),debug)
-		TARGET_LDFLAGS += -g -O2
-	endif
+    ifeq ($(FLAVOR),debug)
+        TARGET_LDFLAGS += -g -O2
+    endif
 
-	ifeq ($(FLAVOR),release)
-		TARGET_LDFLAGS += -g -O0
-	endif
+    ifeq ($(FLAVOR),release)
+        TARGET_LDFLAGS += -g -O0
+    endif
 
-	dummy: all
+    dummy: all
 
-	lib/libjsmn.a: libraries/jsmn/Makefile 
-		make -C libraries/jsmn FREERTOS=yes
+    lib/libjsmn.a: libraries/jsmn/Makefile 
+        make -C libraries/jsmn FREERTOS=yes
 
-	lib/libpaho_mqtt_client.a: libraries/paho_mqtt_client_embedded_c/Makefile 
-		make -C libraries/paho_mqtt_client_embedded_c FREERTOS=yes
+    lib/libpaho_mqtt_client.a: libraries/paho_mqtt_client_embedded_c/Makefile 
+        make -C libraries/paho_mqtt_client_embedded_c FREERTOS=yes
 
-	lib/iwot.a: iwot/Makefile lib/libjsmn.a lib/libpaho_mqtt_client.a
-		make -C iwot FREERTOS=yes
-
-
-	COMPONENTS_eagle.app.v6 = \
-		user/libuser.a  \
-		driver/libdriver.a 
-		
-	LINKFLAGS_eagle.app.v6 = \
-		-L$(SDK_PATH)/lib        \
-		-Wl,--gc-sections   \
-		-nostdlib	\
-		-T$(LD_FILE)   \
-		-Wl,--no-check-sections	\
-		-u call_user_start	\
-		-Wl,-static						\
-		-Wl,--start-group					\
-		-lcirom \
-		-lcrypto	\
-		-lespconn	\
-		-lespnow	\
-		-lfreertos	\
-		-lgcc					\
-		-lhal					\
-		-ljson	\
-		-llwip	\
-		-lmain	\
-		-lmesh	\
-		-lmirom	\
-		-lnet80211	\
-		-lnopoll	\
-		-lphy	\
-		-lpp	\
-		-lpwm	\
-		-lsmartconfig	\
-		-lspiffs	\
-		-lssl	\
-		-lwpa	\
-		-lwps		\
-		-L./lib \
-		-ljsmn \
-		-lpaho_mqtt_client \
-		-liwot \
-		$(DEP_LIBS_eagle.app.v6)					\
-		-Wl,--end-group
-
-	DEPENDS_eagle.app.v6 = \
-					$(LD_FILE) \
-					$(LDDIR)/eagle.rom.addr.v6.ld \
-					lib/iwot.a         
-
-	#############################################################
-	# Configuration i.e. compile options etc.
-	# Target specific stuff (defines etc.) goes in here!
-	# Generally values applying to a tree are captured in the
-	#   makefile at its root level - these are then overridden
-	#   for a subtree within the makefile rooted therein
-	#
-
-	#UNIVERSAL_TARGET_DEFINES =		\
-
-	# Other potential configuration flags include:
-	#	-DTXRX_TXBUF_DEBUG
-	#	-DTXRX_RXBUF_DEBUG
-	#	-DWLAN_CONFIG_CCX
-	CONFIGURATION_DEFINES =	-DICACHE_FLASH
-	# CONFIGURATION_DEFINES =	-DICACHE_FLASH -U__STRICT_ANSI__
-
-	# ifeq ($(SPI_SIZE_MAP), 2) 
-	#   CONFIGURATION_DEFINES += -DESP01 
-	# endif 
-
-	DEFINES +=				\
-		$(UNIVERSAL_TARGET_DEFINES)	\
-		$(CONFIGURATION_DEFINES)
-
-	DDEFINES +=				\
-		$(UNIVERSAL_TARGET_DEFINES)	\
-		$(CONFIGURATION_DEFINES)
+    lib/iwot.a: iwot/Makefile lib/libjsmn.a lib/libpaho_mqtt_client.a
+        make -C iwot FREERTOS=yes
 
 
-	#############################################################
-	# Recursion Magic - Don't touch this!!
-	#
-	# Each subtree potentially has an include directory
-	#   corresponding to the common APIs applicable to modules
-	#   rooted at that subtree. Accordingly, the INCLUDE PATH
-	#   of a module can only contain the include directories up
-	#   its parent path, and not its siblings
-	#
-	# Required for each makefile to inherit from the parent
-	#
+    COMPONENTS_eagle.app.v6 = \
+        user/libuser.a  \
+        driver/libdriver.a 
+        
+    LINKFLAGS_eagle.app.v6 = \
+        -L$(SDK_PATH)/lib        \
+        -Wl,--gc-sections   \
+        -nostdlib    \
+        -T$(LD_FILE)   \
+        -Wl,--no-check-sections    \
+        -u call_user_start    \
+        -Wl,-static                        \
+        -Wl,--start-group                    \
+        -lcirom \
+        -lcrypto    \
+        -lespconn    \
+        -lespnow    \
+        -lfreertos    \
+        -lgcc                    \
+        -lhal                    \
+        -ljson    \
+        -llwip    \
+        -lmain    \
+        -lmesh    \
+        -lmirom    \
+        -lnet80211    \
+        -lnopoll    \
+        -lphy    \
+        -lpp    \
+        -lpwm    \
+        -lsmartconfig    \
+        -lspiffs    \
+        -lssl    \
+        -lwpa    \
+        -lwps        \
+        -L./lib \
+        -ljsmn \
+        -lpaho_mqtt_client \
+        -liwot \
+        $(DEP_LIBS_eagle.app.v6)                    \
+        -Wl,--end-group
 
-	INCLUDES := $(INCLUDES) -I $(PDIR)include
-	sinclude $(SDK_PATH)/Makefile
+    DEPENDS_eagle.app.v6 = \
+                    $(LD_FILE) \
+                    $(LDDIR)/eagle.rom.addr.v6.ld \
+                    lib/iwot.a         
 
-	.PHONY: FORCE
-	FORCE:
+    #############################################################
+    # Configuration i.e. compile options etc.
+    # Target specific stuff (defines etc.) goes in here!
+    # Generally values applying to a tree are captured in the
+    #   makefile at its root level - these are then overridden
+    #   for a subtree within the makefile rooted therein
+    #
+
+    #UNIVERSAL_TARGET_DEFINES =        \
+
+    # Other potential configuration flags include:
+    #    -DTXRX_TXBUF_DEBUG
+    #    -DTXRX_RXBUF_DEBUG
+    #    -DWLAN_CONFIG_CCX
+    CONFIGURATION_DEFINES =    -DICACHE_FLASH
+    # CONFIGURATION_DEFINES =    -DICACHE_FLASH -U__STRICT_ANSI__
+
+    # ifeq ($(SPI_SIZE_MAP), 2) 
+    #   CONFIGURATION_DEFINES += -DESP01 
+    # endif 
+
+    DEFINES +=                \
+        $(UNIVERSAL_TARGET_DEFINES)    \
+        $(CONFIGURATION_DEFINES)
+
+    DDEFINES +=                \
+        $(UNIVERSAL_TARGET_DEFINES)    \
+        $(CONFIGURATION_DEFINES)
+
+
+    #############################################################
+    # Recursion Magic - Don't touch this!!
+    #
+    # Each subtree potentially has an include directory
+    #   corresponding to the common APIs applicable to modules
+    #   rooted at that subtree. Accordingly, the INCLUDE PATH
+    #   of a module can only contain the include directories up
+    #   its parent path, and not its siblings
+    #
+    # Required for each makefile to inherit from the parent
+    #
+
+    INCLUDES := $(INCLUDES) -I $(PDIR)include
+    sinclude $(SDK_PATH)/Makefile
+
+    .PHONY: FORCE
+    FORCE:
 
 此處 RTOS SDK 的 sample 有提供一個可修改參數的 bash script gen\_misc.sh 可以利用來編譯與建立程式碼 (build code)，但要先將 SDK 的路徑加入全域變數。
 
 ::
 
-	XTENSA_TOOLS_ROOT=”~/tutorial/sdk/xtensa-lx106-elf/bin/”    <- Your SDK location
-	SDK_PATH=”~/tutorial/sdk/esp-rtos-sdk-1.4”                  <- Your SDK location
-	export PATH=$PATH:$XTENSA_TOOLS_ROOT 
-	export XTENSA_TOOLS_ROOT=$XTENSA_TOOLS_ROOT
-	export SDK_PATH=$SDK_PATH
+    XTENSA_TOOLS_ROOT=”~/tutorial/sdk/xtensa-lx106-elf/bin/”    <- Your SDK location
+    SDK_PATH=”~/tutorial/sdk/esp-rtos-sdk-1.4”                  <- Your SDK location
+    export PATH=$PATH:$XTENSA_TOOLS_ROOT 
+    export XTENSA_TOOLS_ROOT=$XTENSA_TOOLS_ROOT
+    export SDK_PATH=$SDK_PATH
 
 此時應該可以正常編譯與建立此專案。
 
-(或由`此 <./files>`_ 下載)
+(或由 `此 <./files>`_ 下載)
 
 程式碼說明
 ----------
@@ -519,25 +519,25 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 ::
 
-	void wifi_setup(){
-		//Connect WIFI
-		struct station_config *cfg = zalloc(sizeof(struct station_config));
-		sprintf((char*)cfg->ssid, "wifi_ssid");
-		sprintf((char*)cfg->password, "wifi_password");
-		wifi_station_set_config(cfg);
-		wifi_set_opmode(STATION_MODE);
-		printf("[WiFi]Set wifi mode STATION_MODE");
-	}
+    void wifi_setup(){
+        //Connect WIFI
+        struct station_config *cfg = zalloc(sizeof(struct station_config));
+        sprintf((char*)cfg->ssid, "your_wifi_ssid");
+        sprintf((char*)cfg->password, "your_wifi_password");
+        wifi_station_set_config(cfg);
+        wifi_set_opmode(STATION_MODE);
+        printf("[WiFi]Set wifi mode STATION_MODE");
+    }
 
-並且先完成將要使用到的 GPIO 設定，這裡僅用到 D0 做輸出
+並且先完成將要使用到的 GPIO 設定，這裡僅用到 D1 做輸出
 
 ::
 
     void gpio_init(){
-    uint32 pin = 5; // D1 : GPIO 5
-    gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
-    uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
-    GPIO_AS_OUTPUT(gpio_pin_mask);  
+        uint32 pin = 5; // D1 : GPIO 5
+        gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
+        uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
+        GPIO_AS_OUTPUT(gpio_pin_mask);  
     }
 
 
@@ -545,15 +545,13 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 ::
 
-    #include “iwot.h”;
+    #include “iwot.h”
 
 接下來 iWoT Device SDK 的所有動作都定義在 iwot.h 來操作。基本流程如下
 
-準備 Web Thing Model
-
-撰寫 action handler
-
-初始化並建立連線
+- 準備 Web Thing Model
+- 撰寫 action handler
+- 初始化並建立連線
 
 準備 Web Thing Model
 ~~~~~~~~~~~~~~~~~~~~
@@ -602,27 +600,27 @@ action 時會交由對應的 action handler 處理。
 
     int actionHandler(IWOTVAROBJECT *var)
     {
-    IWOTVARGROUP **groups = var->groups;
-    IWOTVARITEM **items;
+        IWOTVARGROUP **groups = var->groups;
+        IWOTVARITEM **items;
 
-    int s = 0;
-    int i, j;
-    
-    for (i = 0; i < var->groupCount; i++, groups++) {  
+        int s = 0;
+        int i, j;
         
-        if(0 == strcmp((*groups)->identifier, "switch")) {
-        items = (*groups)->items;  
-        for (j = 0; j < (*groups)->itemCount; j++, items++) {
-            if (0 == strcmp((*items)->key, "ledState")) {
-            s = (*items)->value.integer;  
-            printf("switch ledState to :%d \n",s);
-            GPIO_OUTPUT(GPIO_Pin_5, s);
-            } 
-        }    
-        }          
-    }
+        for (i = 0; i < var->groupCount; i++, groups++) {  
+            
+            if(0 == strcmp((*groups)->identifier, "switch")) {
+                items = (*groups)->items;  
+                for (j = 0; j < (*groups)->itemCount; j++, items++) {
+                    if (0 == strcmp((*items)->key, "ledState")) {
+                        s = (*items)->value.integer;  
+                        printf("switch ledState to :%d \n",s);
+                        GPIO_OUTPUT(GPIO_Pin_5, s);
+                    }
+                }
+            }
+        }
 
-    return 0;
+        return 0;
     }
 
 所有的 action 都交由同一個 action handler 處理，因此必須先判斷所觸發的 action 是哪一個。以範例中的 model 為例，判斷方式為 if(0 == strcmp((\*groups)->identifier, "switch")) {...}。收到後可以由 action 參數中取得參數 ledState (key) 與其傳入值：value.integer 。
@@ -646,8 +644,8 @@ action 時會交由對應的 action handler 處理。
     char * modelJSON  = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"name\":\"LED Light Switch\",\"description\":\"Set esp8266 LED light on/off\",\"values\":{\"ledState\":{\"name\":\"LED State\",\"description\":\"LED state\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":1}}}}}";
 
     if(IWOT_EC_SUCCESS != iwot_util_create_config(
-            accessKey, secretKey, host,  0, 
-            modelJSON, 0, &iwotConfig)){
+        accessKey, secretKey, host,  0, 
+        modelJSON, 0, &iwotConfig)){
 
         return 0;
     }    
@@ -671,140 +669,130 @@ action 時會交由對應的 action handler 處理。
 
 ::
 
-	#include <stdio.h>
-	#include "esp_common.h"
-	#include "uart.h"
-	#include "iwot.h"
-	#include "gpio.h"
+    #include <stdio.h>
+    #include "esp_common.h"
+    #include "uart.h"
+    #include "iwot.h"
+    #include "gpio.h"
 
+    THING *thing = 0;
+    IWOTCONFIG *iwotConfig = 0;
 
-	THING *thing = 0;
-	IWOTCONFIG *iwotConfig = 0;
+    int actionHandler(IWOTVAROBJECT *var)
+    {
+        IWOTVARGROUP **groups = var->groups;
+        IWOTVARITEM **items;
 
-	int actionHandler(IWOTVAROBJECT *var)
-	{
-	  IWOTVARGROUP **groups = var->groups;
-	  IWOTVARITEM **items;
+        int s = 0;
+        int i, j;
 
-	  int s = 0;
-	  int i, j;
-	  
-	  for (i = 0; i < var->groupCount; i++, groups++) {  
-		
-		if(0 == strcmp((*groups)->identifier, "switch")) {
-		  items = (*groups)->items;  
-		  for (j = 0; j < (*groups)->itemCount; j++, items++) {
-			if (0 == strcmp((*items)->key, "ledState")) {
-			  s = (*items)->value.integer;  
-			  printf("switch ledState to :%d \n",s);
-			  GPIO_OUTPUT(GPIO_Pin_5, s);
-			} 
-		  }    
-		}          
-	  }
+        for (i = 0; i < var->groupCount; i++, groups++) {
 
-	  return 0;
-	}
+            if(0 == strcmp((*groups)->identifier, "switch")) {
+                items = (*groups)->items;
+                for (j = 0; j < (*groups)->itemCount; j++, items++) {
+                    if (0 == strcmp((*items)->key, "ledState")) {
+                        s = (*items)->value.integer;
+                        printf("switch ledState to :%d \n",s);
+                        GPIO_OUTPUT(GPIO_Pin_5, s);
+                    }
+                }
+            }
+        }
 
-	int connect_iWoT() 
-	{
-	  char *host = "dev.iwot.io"; 
-	  char *accessKey = "your_access_key"; 
-	  char *secretKey = "your_secret_key"; 
+        return 0;
+    }
 
-	  IWOTERRORCODE ec = IWOT_EC_SUCCESS;
-	  char * modelJSON  = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
-	  
-	  if(IWOT_EC_SUCCESS != iwot_util_create_config(
-			accessKey, secretKey, host,  0, 
-			modelJSON, 0, &iwotConfig)){
+    int connect_iWoT()
+    {
+        char *host = "dev.iwot.io";
+        char *accessKey = "your_access_key";
+        char *secretKey = "your_secret_key";
 
-		return 0;
-	  }    
+        IWOTERRORCODE ec = IWOT_EC_SUCCESS;
+        char *modelJSON = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
 
-	  if(IWOT_EC_SUCCESS != iwot_thing_init(iwotConfig, &thing)) {    
+        if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, 0, &iwotConfig)) {
+            return 0;
+        }
 
-		return 0;
-	  }
+        if(IWOT_EC_SUCCESS != iwot_thing_init(iwotConfig, &thing)) {
+            return 0;
+        }
 
-	  if(IWOT_EC_SUCCESS != iwot_thing_connect(thing, actionHandler, 0, 0)) {
-		iwot_thing_uninit(&thing);
+        if(IWOT_EC_SUCCESS != iwot_thing_connect(thing, actionHandler, 0, 0)) {
+            iwot_thing_uninit(&thing);
 
-		return 0;
-	  }
-	  
-	  return 1;
-	}
+            return 0;
+        }
 
-	int wait_for_network_on(){
-		int onLine = 0;  
+        return 1;
+    }
 
-		// Wait till connect
-		STATION_STATUS sta_stat = STATION_CONNECTING;
-		int count = 0;
-		do {
-			vTaskDelay(1000/portTICK_RATE_MS);
-			sta_stat = wifi_station_get_connect_status();
-			count++;
-		} while(STATION_CONNECTING == sta_stat);
-		if (STATION_GOT_IP == sta_stat) {
-		  onLine = 1;
-		}
-		// printf("[WiFi][Done]Network status %d\n", sta_stat);
-		return onLine;
-	}
+    int wait_for_network_on() {
+        int onLine = 0;
 
-	void iwot_task(void * pvParameters)
-	{
-	  while (wait_for_network_on()) {
-		printf("%s \n","MQTT connecting...");    
-		if(connect_iWoT()) {
-		  printf("%s \n","MQTT connected.");
-		  while (1) {
-			vTaskDelay(5000 / portTICK_RATE_MS);
-		  } 
-		} 
-	  } 
-	}
+    // Wait till connect
+        STATION_STATUS sta_stat = STATION_CONNECTING;
+        int count = 0;
+        do {
+            vTaskDelay(1000/portTICK_RATE_MS);
+            sta_stat = wifi_station_get_connect_status();
+            count++;
+        } while(STATION_CONNECTING == sta_stat);
+        if (STATION_GOT_IP == sta_stat) {
+            onLine = 1;
+        }
+    // printf("[WiFi][Done]Network status %d\n", sta_stat);
+        return onLine;
+    }
 
-	void gpio_init(){
-	  uint32 pin = 5; // D1 : GPIO 5
-	  gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
-	  uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
-	  GPIO_AS_OUTPUT(gpio_pin_mask);  
-	}
+    void iwot_task(void * pvParameters)
+    {
+        while (wait_for_network_on()) {
+            printf("%s \n","MQTT connecting...");
+            if(connect_iWoT()) {
+                printf("%s \n","MQTT connected.");
+                while (1) {
+                    vTaskDelay(5000 / portTICK_RATE_MS);
+                }
+            }
+        }
+    }
 
-	void wifi_setup(){
-		//Connect WIFI
-		struct station_config *cfg = zalloc(sizeof(struct station_config));
-		sprintf((char*)cfg->ssid, "your_wifi_ssid"); //
-		sprintf((char*)cfg->password, "your_wifi_password"); //
-		wifi_station_set_config(cfg);
-		wifi_set_opmode(STATION_MODE);
-	}
-	void user_init(void)
-	{
-		printf("SDK version:%s,%u\n", system_get_sdk_version(),__LINE__ );
-		
-		// Connect to internet.
-		wifi_setup();
-		// Init gpio.
-		gpio_init();
-		// GPIO_OUTPUT(GPIO_Pin_5, 1);
+    void gpio_init() {
+        uint32 pin = 5; // D1 : GPIO 5
+        gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
+        uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
+        GPIO_AS_OUTPUT(gpio_pin_mask);
+    }
 
-		// Create main task.
-		xTaskCreate(iwot_task, "IWOT_TASK", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
-	}
+    void wifi_setup() {
+        //Connect WIFI
+        struct station_config *cfg = zalloc(sizeof(struct station_config));
+        sprintf((char*)cfg->ssid, "your_wifi_ssid");
+        sprintf((char*)cfg->password, "your_wifi_password");
+        wifi_station_set_config(cfg);
+        wifi_set_opmode(STATION_MODE);
+    }
+    void user_init(void)
+    {
+        printf("SDK version:%s,%u\n", system_get_sdk_version(),__LINE__ );
 
-	uint32 user_rf_cal_sector_set(void)
-	{
-		return 0;
-	}
+        // Connect to internet.
+        wifi_setup();
+        // Init gpio.
+        gpio_init();
+        // GPIO_OUTPUT(GPIO_Pin_5, 1);
+
+        // Create main task.
+        xTaskCreate(iwot_task, "IWOT_TASK", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
+    }
 
 執行結果
 --------
 
-使用命令列編譯並燒錄至esp8266執行
+使用命令列編譯並燒錄至 ESP8266 執行
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 編譯指令 :
@@ -813,7 +801,7 @@ action 時會交由對應的 action handler 處理。
 
     $ cd tutorial/esp8266\_app/
 
-為編譯命令腳本gen\_misc.sh加入環境變數 :
+為編譯命令腳本 gen\_misc.sh 加入環境變數 :
 
 ::
 
@@ -836,7 +824,6 @@ action 時會交由對應的 action handler 處理。
 ::
 
     $ cd tutorial/
-
     $ python EspTools/script\_smp/esptool.py -p /dev/ttyUSB0 write\_flash --flash\_mode qio --flash\_size 32m-c1 0x0 esp8266\_app/bin/eagle.flash.bin 0x20000 esp8266\_app/bin/eagle.irom0text.bin
 
 利用 gtkterm (需要用sudo)接收NodeMCU輸出結果如下：
