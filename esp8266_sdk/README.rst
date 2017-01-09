@@ -590,9 +590,6 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
 
-實作接收來自 iWoT 的 actions 及點亮 LED
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 撰寫 actions handler
 ~~~~~~~~~~~~~~~~~~~~
 
