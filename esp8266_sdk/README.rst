@@ -60,37 +60,37 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 ::
 
  tutorial/
- ├── EspTools                <- Esp tool
- ├── sdk/esp-rtos-sdk-1.4    <- Esp Rtos SDK
- └── sdk/xtensa-lx106-elf    <- Tool Chain
+ ├── EspTools/                <- Esp tool
+ ├── sdk/esp-rtos-sdk-1.4/    <- Esp Rtos SDK
+ └── sdk/xtensa-lx106-elf/    <- Tool Chain
 
 安裝終端機工具 `gtkterm <http://gtkterm.feige.net/>`_
 
 ::
 
- $ sudo apt-get install gtkterm;
+ $ sudo apt-get install gtkterm
 
 建立專案資料夾 esp8266\_app
 
 ::
 
  tutorial/
- ├── esp8266\_app            <- 專案資料夾
- ├── EspTools
- ├── sdk/esp-rtos-sdk-1.4
- └── sdk/xtensa-lx106-elf
+ ├── esp8266_app/            <- 專案資料夾
+ ├── EspTools/
+ ├── sdk/esp-rtos-sdk-1.4/
+ └── sdk/xtensa-lx106-elf/
 
 由 RTOS SDK 中，複製 gpio interface 到專案資料夾 esp8266\_app 中
 
 ::
 
- $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/driver\_lib/. tutorial/esp8266\_app/
+ $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/driver_lib/. tutorial/esp8266_app/
 
 目錄結構如下
 
 ::
 
- esp8266\_app/
+ esp8266_app/
  ├── include/
  └── driver/     <- gpio driver
 
@@ -98,8 +98,8 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 ::
 
- $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/project\_template/.
- tutorial/esp8266\_app/
+ $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/project_template/.
+ tutorial/esp8266_app/
 
 資料夾 user 應該包含 user\_main.c 與 Makefile。
 
@@ -111,17 +111,15 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 ::
 
- esp8266\_app/
+ esp8266_app/
  ├── user/       <- 裝置端程式
- ├── lib/        <- 建立Makefile會用到的空目錄
+ ├── lib/        <- 建立 Makefile 會用到的空目錄
  ├── include/
  └── driver/
 
 下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_。
 
-下載並解壓縮 iWoT 需要的程式庫
-jsmn :  https://github.com/zserge/jsmn
-paho :  https://eclipse.org/paho/clients/c/embedded/
+下載並解壓縮 iWoT 需要的程式庫， `jsmn <https://github.com/zserge/jsmn`_ 和 `paho <https://eclipse.org/paho/clients/c/embedded/`_
 
 並放置於 libraries/
 
@@ -131,11 +129,11 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 
 ::
 
- esp8266\_app/
+ esp8266_app/
  ├── iwot/          <- iWoT C SDK
  ├── libraries/     <- libraries for iWoT
  ├── libraries/jsmn
- ├── libraries/paho\_mqtt\_client\_embedded\_c
+ ├── libraries/paho_mqtt_client_embedded_c
  ├── user/
  ├── lib/
  ├── include/
@@ -149,7 +147,7 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 
 修改 iwot jsmn paho\_mqtt\_client\_embedded\_c 三者主要不同處為 LIB 處路徑名
 
-以下為iwot Makefile 完整檔案 :
+以下為 iwot Makefile 完整檔案 :
 
 ::
 
@@ -334,7 +332,7 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 	PDIR := ../$(PDIR)
 	sinclude $(PDIR)Makefile
 
-在 tutorial 專案資料夾下的 Makefile 需要將我們用到的模組設定加進去的地方有 ``lib/libjsmn.a``、 ``lib/libpaho\_mqtt\_client.a``、 ``lib/iwot.a``、 ``LINKFLAGS\_eagle.app.v6``、 ``DEPENDS\_eagle.app.v6``。
+在 tutorial 專案資料夾下的 Makefile 需要將我們用到的模組設定加進去的地方有 lib/libjsmn.a、lib/libpaho\_mqtt\_client.a、lib/iwot.a、LINKFLAGS\_eagle.app.v6、DEPENDS\_eagle.app.v6。
 
 ::
 
@@ -507,6 +505,9 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 
 (或由`此 <./files>`_ 下載)
 
+程式碼說明
+----------
+
 設定 NodeMCU 連網
 ~~~~~~~~~~~~~~~~~
 
@@ -561,7 +562,7 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 
 ::
 
-    var model = {
+    {
         "classID":"model_esp8266_led",
         "id":"esp_00001",
         "name":"ESP_Sample_Led",
@@ -574,10 +575,10 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
                 }
             }
         }
-    };
+    }
 
 
-以下為字串格式 :
+以下為 C 語言字串格式 :
 
 ::
 
@@ -585,11 +586,11 @@ paho :  https://eclipse.org/paho/clients/c/embedded/
 
 稍後我們將定義此裝置的 id 為 esp\_00001，並且具備以下能力：
 
-可以接受一個 actions -> switch，包含1個整數型態的傳入值。在本範例中我們用來指定LED的開關。
+可以接受一個 actions -> switch，包含 1 個整數型態的傳入值。在本範例中我們用來指定 LED 的開關。
 
 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
 
-實作接收來自iWoT 的actions 及點亮 LED
+實作接收來自 iWoT 的 actions 及點亮 LED
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 撰寫 actions handler
@@ -922,12 +923,12 @@ Global Rule Engine 的頁籤沒有顯示預期中的資料
 確認規則的 iWoT\_Thing 元件已依照上述教學文件正確設定。
 
 .. |1| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/1.jpg
-.. |2| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/2.jpg
-.. |3| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/3.jpg
-.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.jpg
-.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.jpg
-.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.jpg
-.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.jpg
-.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.jpg
-.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.jpg
+.. |2| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/2.png
+.. |3| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/3.png
+.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.png
+.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.png
+.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.png
+.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.png
+.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.png
+.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.png
 .. |10| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/10.jpg
