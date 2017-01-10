@@ -942,10 +942,10 @@ Global Rule Engine 的頁籤沒有顯示預期中的資料
 .. |1| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/1.jpg
 .. |2| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/2.png
 .. |3| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/3.png
-.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.png
-.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.png
-.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.png
-.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.png
-.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.png
-.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.png
+.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.png
+.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.png
+.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.png
+.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.png
+.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.png
+.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.png
 .. |10| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/10.jpg
