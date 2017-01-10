@@ -121,11 +121,11 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
 下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_。
 
-下載並解壓縮 iWoT 需要的程式庫， `jsmn <https://github.com/zserge/jsmn`_ 和 `paho <https://eclipse.org/paho/clients/c/embedded/`_
+下載並解壓縮 iWoT 需要的程式庫， `jsmn <https://github.com/zserge/jsmn>`_ 和 `paho <https://eclipse.org/paho/clients/c/embedded>`_
 
 並放置於 libraries/
 
-(或由 `此 <./files`_ 下載)
+(或由 `此 <./files>`_ 下載)
 
 建立目錄結構
 
@@ -799,9 +799,9 @@ action 時會交由對應的 action handler 處理。
 
 ::
 
-    $ cd tutorial/esp8266\_app/
+    $ cd tutorial/esp8266_app/
 
-為編譯命令腳本 gen\_misc.sh 加入環境變數 :
+為編譯命令腳本 gen_misc.sh 加入環境變數 :
 
 ::
 
@@ -817,7 +817,7 @@ action 時會交由對應的 action handler 處理。
 
 ::
 
-    $ sh gen\_misc.sh
+    $ sh gen_misc.sh
 
 燒錄指令 :
 
@@ -864,7 +864,7 @@ action 時會交由對應的 action handler 處理。
 下載鏈結
 --------
 
-可以到以下 `鏈結 <./files>`_ 下載專案相關檔案。
+可以到 `此 <./files>`_ 下載專案相關檔案。
 
 RTOS SDK : esp8266\_rtos\_sdk\_1.4.x.tar.gz
 
@@ -879,6 +879,8 @@ iWoT SDK dependency libraries : libraries.tar.gz
 Sample project : esp8266\_app.tar.gz
 
 Tutorial (Full with SDK and Tools): tutorial.tar.gz
+
+
 
 常見問題
 --------
@@ -903,7 +905,29 @@ Tutorial (Full with SDK and Tools): tutorial.tar.gz
 
     $ cd tutorial/sdk/xtensa-lx106-elf/libexec/gcc/xtensa-lx106-elf/4.8.5/
     $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so
-    $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so.0
+    $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so.0
+    
+執行時期錯誤
+~~~~~~~~~~~~
+若發生程式crash在以下狀態
+
+::
+
+    SSL enabled.
+    Fatal exception (3):
+    epc1=0x4000df1b
+    epc2=0x00000000
+    epc3=0x4000dd2d
+    epcvaddr=0x4026ca30
+    depc=0x00000000
+    rtn_add=0x400018bc
+
+此現象為 SSL libraries issue. 請將 rtos sdk 中的 libssl.a (ssl library) 置換為 1.4.0版即可。可以到 `此 <./files>`_ 下載。置換路徑為
+
+::
+
+    tutorial/sdk/esp-rtos-sdk-1.4/lib
+
 
 Global Rule Engine 的頁籤沒有顯示預期中的資料
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
