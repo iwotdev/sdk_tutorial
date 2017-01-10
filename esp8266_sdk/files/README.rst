@@ -10,6 +10,7 @@ Tool Chain         xtensa-lx106-elf.tar.gz
 Burn Tool          EspTools.tar.gz
 iWoT SDK           iwot.tar.gz
 libraries          libraries.tar.gz (iWoT SDK dependency)
+libssl.a           SSL library 1.4.0
 Sample project     esp8266_app.tar.gz
 Tutorial           tutorial.tar.gz (Full with SDK and Tools)
 ==============     =====
