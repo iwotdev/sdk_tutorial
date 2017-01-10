@@ -23,48 +23,48 @@ LED 傳感器一枚
 準備開發環境
 ------------
 
-PC 開發環境為 Ubuntu 14.04 64位元版本。
+開發環境為 Ubuntu 14.04 64 位元版本的 PC。
 
-請確認 PC 環境: `GCC <https://gcc.gnu.org/>`_ [GCC 4.8以上版本]、python [Python 2.7 or Python 3.4以上版本] ( Ubuntu 14 版預載的 Python 是 2.7.x 版 )
-
-安裝GCC :
+請確認 PC 中已安裝 gcc (4.8 以上版本) 和 python (2.7 或 3.4 以上版本)
 
 ::
 
-$ sudo apt-get update
-$ sudo apt-get upgrade
-$ sudo apt-get install build-essential
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
+    $ sudo apt-get install build-essential
+    $ sudo apt-get install python
 
 確認版本 :
 
 ::
 
-$ gcc -v
+    $ gcc -v
+    $ python -V
 
-安裝相關程式庫 :
+安裝相關程式庫與工具 :
 
 ::
 
-$ sudo apt-get install git autoconf build-essential gperf bison flex texinfo libtool libncurses5-dev wget gawk libc6-dev-amd64 python-serial libexpat-dev
+    $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo libtool libncurses5-dev wget gawk libc6-dev-amd64 python-serial libexpat-dev
 
-下載並建立 `Compile-Tool-Chain [xtensa-lx106-elf] <https://github.com/pfalcon/esp-open-sdk.git>`_
+下載並建立 `ESP tools <https://github.com/espressif/esptool>`_
 
-下載並建立 `esp rtos SDK [esp-rtos-sdk-1.4] <https://github.com/espressif/ESP8266_RTOS_SDK/tree/1.4.x>`_
+下載並建立 `ESP RTOS SDK [esp-rtos-sdk-1.4] <https://github.com/espressif/ESP8266_RTOS_SDK/tree/1.4.x>`_
 
-下載並建立 `ESP image tool <https://github.com/espressif/esptool>`_
+下載並建立 `Compile Tool Chain [xtensa-lx106-elf] <https://github.com/pfalcon/esp-open-sdk.git>`_
 
-以上相關建立細節可參考 `ESP8266 wiki <https://github.com/esp8266/esp8266-wiki/wiki/Toolchain>`_。(或由 `此 <./files>`_ 下載已建立完成檔案)
+以上相關建立細節可參考 `ESP8266 wiki <https://github.com/esp8266/esp8266-wiki/wiki/Toolchain>`_。(或由 `此 <./files>`_ 下載已建立完成的檔案)
 
 (解壓命令提示: tar zxvf *FILENAME*.tar.gz)
 
-建立目錄結構 tutorial 為我們這次的基礎目錄名稱
+建立 tutorial 目錄並依照以下結構放入程式庫與工具
 
 ::
 
  tutorial/
- ├── EspTools/                <- Esp tool
- ├── sdk/esp-rtos-sdk-1.4/    <- Esp Rtos SDK
- └── sdk/xtensa-lx106-elf/    <- Tool Chain
+ ├── EspTools/                <- ESP tools
+ ├── sdk/esp-rtos-sdk-1.4/    <- ESP RTOS SDK
+ └── sdk/xtensa-lx106-elf/    <- Compile Tool Chain
 
 安裝終端機工具 `gtkterm <http://gtkterm.feige.net/>`_
 
@@ -72,58 +72,54 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 
  $ sudo apt-get install gtkterm
 
-建立專案資料夾 esp8266\_app
+建立專案目錄 esp8266\_app
 
 ::
 
  tutorial/
- ├── esp8266_app/            <- 專案資料夾
+ ├── esp8266_app/            <- 專案目錄
  ├── EspTools/
  ├── sdk/esp-rtos-sdk-1.4/
  └── sdk/xtensa-lx106-elf/
 
-由 RTOS SDK 中，複製 gpio interface 到專案資料夾 esp8266\_app 中
+由 RTOS SDK 中，複製 gpio driver 到專案目錄 esp8266\_app 中
 
 ::
 
  $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/driver_lib/. tutorial/esp8266_app/
 
-目錄結構如下
+esp8266_app/ 專案目錄結構如下
 
 ::
 
  esp8266_app/
  ├── include/
- └── driver/     <- gpio driver
+ └── driver/
 
-由 RTOS SDK 中，複製 user 到 esp8266\_app
+由 RTOS SDK 中，複製 project template 到 esp8266\_app
 
 ::
 
  $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/project_template/.
  tutorial/esp8266_app/
 
-資料夾 user 應該包含 user\_main.c 與 Makefile。
+esp8266\_app/ 應該包含 gen\_misc.sh 與 Makefile
 
-資料夾 esp8266\_app 應該包含 gen\_misc.sh 與 Makefile。
+esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
 
-主程式進入點裝置端程式為 tutorial/esp8266\_app/user/user\_main.c
+主程式進入點裝置端程式為 esp8266\_app/user/user\_main.c
 
-建立目錄結構lib
+建立 lib/ 目錄，此時專案目錄結構如下
 
 ::
 
  esp8266_app/
- ├── user/       <- 裝置端程式
+ ├── user/       <- 裝置端主程式
  ├── lib/        <- 建立 Makefile 會用到的空目錄
  ├── include/
  └── driver/
 
-下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_。
-
-下載並解壓縮 iWoT 需要的程式庫， `jsmn <https://github.com/zserge/jsmn`_ 和 `paho <https://eclipse.org/paho/clients/c/embedded/`_
-
-並放置於 libraries/
+下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_，並放置於專案目錄中
 
 (或由 `此 <./files`_ 下載)
 
@@ -132,10 +128,7 @@ $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo lib
 ::
 
  esp8266_app/
- ├── iwot/          <- iWoT C SDK
- ├── libraries/     <- libraries for iWoT
- ├── libraries/jsmn
- ├── libraries/paho_mqtt_client_embedded_c
+ ├── iwot/      <- iWoT C SDK
  ├── user/
  ├── lib/
  ├── include/
