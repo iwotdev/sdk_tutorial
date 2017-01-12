@@ -62,7 +62,7 @@ LED 傳感器一枚
 
 ::
 
-    $ wget http://192.168.22.3:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
+    $ wget http://dev.iwot.io:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
 
 查看 libraries 目錄可以看到以下結構 :
 
