@@ -5,6 +5,11 @@ iWoT Device SDK for C on ESP8266 入門教學
 
 iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套件實作了完整的 iWoT 通訊協定，提供穩定與安全的連線機制，讓開發者專注在裝置端的硬體控制與商業邏輯，搭配 iWoT 雲端平台的強大功能，大幅降低開發物聯網應用的門檻。
 
+申請帳號
+--------
+
+請先於 `iWoT <http://dev.iwot.io>`_ 網頁申請帳號，並取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)。
+
 硬體
 ----
 
@@ -25,498 +30,129 @@ LED 傳感器一枚
 
 開發環境為 Ubuntu 14.04 64 位元版本的 PC。
 
-請確認 PC 中已安裝 gcc (4.8 以上版本) 和 python (2.7 或 3.4 以上版本)
-
-::
-
-    $ sudo apt-get update
-    $ sudo apt-get upgrade
-    $ sudo apt-get install build-essential
-    $ sudo apt-get install python
-
-確認版本 :
-
-::
-
-    $ gcc -v
-    $ python -V
 
 安裝相關程式庫與工具 :
 
 ::
 
-    $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo libtool libncurses5-dev wget gawk libc6-dev-amd64 python-serial libexpat-dev
+    $ sudo apt-get update
+    $ sudo apt-get upgrade
+    $ sudo apt-get install git autoconf build-essential gperf bison flex texinfo libtool libncurses5-dev wget gawk libc6-dev-amd64 python-serial libexpat-dev gtkterm
 
-下載並建立 `ESP tools <https://github.com/espressif/esptool>`_
-
-下載並建立 `ESP RTOS SDK [esp-rtos-sdk-1.4] <https://github.com/espressif/ESP8266_RTOS_SDK/tree/1.4.x>`_
-
-下載並建立 `Compile Tool Chain [xtensa-lx106-elf] <https://github.com/pfalcon/esp-open-sdk.git>`_
-
-以上相關建立細節可參考 `ESP8266 wiki <https://github.com/esp8266/esp8266-wiki/wiki/Toolchain>`_。(或由 `此 <./files>`_ 下載已建立完成的檔案)
-
-(解壓命令提示: tar zxvf *FILENAME*.tar.gz)
-
-建立 tutorial 目錄並依照以下結構放入程式庫與工具
+首先在欲建立專案的路徑(~/espProjects)下，下載並建立 rtos 基本工具環境 ：
 
 ::
 
- tutorial/
- ├── EspTools/                <- ESP tools
- ├── sdk/esp-rtos-sdk-1.4/    <- ESP RTOS SDK
- └── sdk/xtensa-lx106-elf/    <- Compile Tool Chain
+    $ cd ~ ; mkdir espProjects; cd espProjects
+    $ wget https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/files/esptools.tar.gz ; tar zxvf esptools.tar.gz
 
-安裝終端機工具 `gtkterm <http://gtkterm.feige.net/>`_
 
-::
-
- $ sudo apt-get install gtkterm
-
-建立專案目錄 esp8266\_app
+查看 esptools 目錄可以看到以下結構 ：
 
 ::
 
- tutorial/
- ├── esp8266_app/            <- 專案目錄
- ├── EspTools/
- ├── sdk/esp-rtos-sdk-1.4/
- └── sdk/xtensa-lx106-elf/
+ esptools/
+ ├── EspTools/            <- ESP tools
+ ├── esp-rtos-sdk-1.4/    <- ESP RTOS SDK
+ └── xtensa-lx106-elf/    <- Compile Tool Chain
 
-由 RTOS SDK 中，複製 gpio driver 到專案目錄 esp8266\_app 中
+( 以上建立 rtos 基本工具環境相關細節可參考 `ESP8266 wiki <https://github.com/esp8266/esp8266-wiki/wiki/Toolchain>`_。 )
 
-::
-
- $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/driver_lib/. tutorial/esp8266_app/
-
-esp8266_app/ 專案目錄結構如下
+下載並建立 iWoT SDK 基本工具環境 ：
 
 ::
 
- esp8266_app/
- ├── include/
- └── driver/
+    $ wget http://192.168.22.3:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
 
-由 RTOS SDK 中，複製 project template 到 esp8266\_app
+查看 libraries 目錄可以看到以下結構 :
 
 ::
 
- $ cp –r tutorial/sdk/esp-rtos-sdk-1.4/examples/project_template/.
- tutorial/esp8266_app/
+ libraries/
+ ├── iwot/
+ ├── jsmn/
+ └── paho_mqtt_client_embedded_c/
 
-esp8266\_app/ 應該包含 gen\_misc.sh 與 Makefile
-
-esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
-
-主程式進入點裝置端程式為 esp8266\_app/user/user\_main.c
-
-建立 lib/ 目錄，此時專案目錄結構如下
+下載 project template 以建立專案 :
 
 ::
 
- esp8266_app/
+    $ wget https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/files/project_template.tar.gz ; tar zxvf project_template.tar.gz
+
+查看 project_template 目錄可以看到以下結構 ：
+
+::
+
+ project_template/
  ├── user/       <- 裝置端主程式
- ├── lib/        <- 建立 Makefile 會用到的空目錄
  ├── include/
  └── driver/
 
-<<<<<<< HEAD
-下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_，並放置於專案目錄中
-=======
-下載並解壓縮 `iWoT C SDK <http://dev.iwot.io/#/web/sdks>`_。
 
-下載並解壓縮 iWoT 需要的程式庫， `jsmn <https://github.com/zserge/jsmn>`_ 和 `paho <https://eclipse.org/paho/clients/c/embedded>`_
-
-並放置於 libraries/
->>>>>>> 75f25d4104f8910d2b86720342befba66c3abe97
-
-(或由 `此 <./files>`_ 下載)
-
-建立目錄結構
+複製專案模板並更名為 led_switch 。
 
 ::
 
- esp8266_app/
- ├── iwot/      <- iWoT C SDK
- ├── user/
- ├── lib/
- ├── include/
- └── driver/
+ $ cp -r project_template led_switch
 
-將 iwot.h 由 esp8266\_app/iwot/ 複製一份到 esp8266\_app/include/ 。
-
-設定 Makefile
-
-替 user、iwot、libraries/jsmn、libraries/paho\_mqtt\_client\_embedded\_c 設定 Makefile
-
-修改 iwot jsmn paho\_mqtt\_client\_embedded\_c 三者主要不同處為 LIB 處路徑名
-
-以下為 iwot Makefile 完整檔案 :
+此時應該可以正常編譯與建立此專案 :
 
 ::
 
-    ############################ Modify Block
-    # name for the target project !
-    LIB        = ../lib/libiwot.a
-    # which modules (subdirectories) of the project to include in compiling
-    MODULES        = .
-    EXTRA_INCDIR    = . ../libraries/jsmn ../libraries/paho_mqtt_client_embedded_c
-    # various paths from the SDK used in this project
-    SDK_LIBDIR    = lib
-    SDK_LDDIR    = ld
-    ############################
+ $ cd led_switch
+ $ sh build.sh
 
-    # Directory the Makefile is in. Please don't include other Makefiles before this.
-    THISDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-    #For FreeRTOS
-    FREERTOS ?= yes
-    # Output directors to store intermediate compiled files
-    # relative to the project directory
-    BUILD_BASE    = build
-    # Base directory for the compiler. Needs a / at the end; if not set it'll use the tools that are in
-    # the PATH.
-    XTENSA_TOOLS_ROOT ?= 
-    # Base directory of the ESP8266 FreeRTOS SDK package, absolute
-    # Only used for the FreeRTOS build
-    SDK_PATH    ?= /opt/Espressif/ESP8266_RTOS_SDK
+ ...
 
-    # compiler flags using during compilation of source files
-    CFLAGS        = -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-inline-functions \
-                -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH -mforce-l32 \
-                -Wno-address -Wno-format-contains-nul -DESP8266 -Wno-unused -Wno-pointer-sign \
-                -DFREERTOS -DLWIP_OPEN_SRC -ffunction-sections -fdata-sections \
-                -DESP8266
+ No boot needed.
+ Generate eagle.flash.bin and eagle.irom0text.bin successully in BIN_PATH
+ eagle.flash.bin-------->0x00000
+ eagle.irom0text.bin---->0x20000
+ !!!
 
-    SDK_INCDIR    = include \
-                include/freertos \
-                include/espressif/esp8266 \
-                include/espressif \
-                extra_include \
-                include/lwip \
-                include/lwip/lwip \
-                include/lwip/ipv4 \
-                include/lwip/ipv6 \
-                    include/spiffs      
 
-    SDK_INCDIR    := $(addprefix -I$(SDK_PATH)/,$(SDK_INCDIR))
 
-    TOOLPREFIX    =xtensa-lx106-elf-
-
-    # select which tools to use as compiler, librarian and linker
-    CC        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
-    AR        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)ar
-    LD        := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)gcc
-    OBJCOPY    := $(XTENSA_TOOLS_ROOT)$(TOOLPREFIX)objcopy
-
-    ####
-    #### no user configurable options below here
-    ####
-    SRC_DIR        := $(MODULES)
-    BUILD_DIR    := $(addprefix $(BUILD_BASE)/,$(MODULES))
-
-    SRC        := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
-    OBJ        := $(patsubst %.c,$(BUILD_BASE)/%.o,$(SRC))
-
-    INCDIR    := $(addprefix -I,$(SRC_DIR))
-    EXTRA_INCDIR    := $(addprefix -I,$(EXTRA_INCDIR))
-    MODULE_INCDIR    := $(addsuffix /include,$(INCDIR))
-
-    V ?= $(VERBOSE)
-    ifeq ("$(V)","1")
-    Q :=
-    vecho := @true
-    else
-    Q := @
-    vecho := @echo
-    endif
-
-    vpath %.c $(SRC_DIR)
-
-    define compile-objects
-    $1/%.o: %.c
-        $(vecho) "CC $$<"
-        $(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
-    endef
-
-    .PHONY: all checkdirs clean 
-
-    all: checkdirs $(LIB) 
-
-    $(LIB): $(BUILD_DIR) $(OBJ)
-        $(vecho) "AR $@"
-        $(Q) $(AR) cru $@ $(OBJ)
-
-    checkdirs: $(BUILD_DIR)
-
-    $(BUILD_DIR):
-        $(Q) mkdir -p $@
-
-    clean:
-        $(Q) rm -f $(LIB)
-        $(Q) find $(BUILD_BASE) -type f | xargs rm -f
-        $(Q) rm -rf $(FW_BASE)
-
-
-    $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
-
-以下為 jsmn Makefile 修改處
-
-::
-
-    ############################ Modify Block
-    # name for the target project !
-    LIB        = ../../lib/libjsmn.a
-    # which modules (subdirectories) of the project to include in compiling
-    MODULES        = .
-    EXTRA_INCDIR    = .  
-    # various paths from the SDK used in this project
-    SDK_LIBDIR    = lib
-    SDK_LDDIR    = ld
-    ############################
-
-以下為 paho\_mqtt\_client\_embedded\_c Makefile 修改處
-
-::
-
-    ############################ Modify Block
-    # name for the target project !
-    LIB        = ../../lib/libpaho_mqtt_client.a
-    # which modules (subdirectories) of the project to include in compiling
-    MODULES        = .
-    EXTRA_INCDIR    = .  
-    # various paths from the SDK used in this project
-    SDK_LIBDIR    = lib
-    SDK_LDDIR    = ld
-    ############################
-
-以下為 user Makefile 完整檔案
-
-::
-
-    #############################################################
-    # Required variables for each makefile
-    # Discard this section from all parent makefiles
-    # Expected variables (with automatic defaults):
-    #   CSRCS (all "C" files in the dir)
-    #   SUBDIRS (all subdirs with a Makefile)
-    #   GEN_LIBS - list of libs to be generated ()
-    #   GEN_IMAGES - list of images to be generated ()
-    #   COMPONENTS_xxx - a list of libs/objs in the form
-    #     subdir/lib to be extracted and rolled up into
-    #     a generated lib/image xxx.a ()
-    #
-    ifndef PDIR
-    GEN_LIBS = libuser.a
-    endif
-
-    #############################################################
-    # Configuration i.e. compile options etc.
-    # Target specific stuff (defines etc.) goes in here!
-    # Generally values applying to a tree are captured in the
-    #   makefile at its root level - these are then overridden
-    #   for a subtree within the makefile rooted therein
-    #
-    #DEFINES += 
-    DEFINES += -DSPIFFS_HAL_CALLBACK_EXTRA=false -DSPIFFS_FILEHDL_OFFSET=true -DLOG_STR_CONST_ATTR="__attribute__((aligned(4))) __attribute__((section(\".irom.text\")))" -mforce-l32
-
-    #############################################################
-    # Recursion Magic - Don't touch this!!
-    #
-    # Each subtree potentially has an include directory
-    #   corresponding to the common APIs applicable to modules
-    #   rooted at that subtree. Accordingly, the INCLUDE PATH
-    #   of a module can only contain the include directories up
-    #   its parent path, and not its siblings
-    #
-    # Required for each makefile to inherit from the parent
-    #
-
-    INCLUDES := $(INCLUDES) -I $(PDIR)include
-    INCLUDES += -I ./  -I ../iwot
-    PDIR := ../$(PDIR)
-    sinclude $(PDIR)Makefile
-
-在 tutorial 專案資料夾下的 Makefile 需要將我們用到的模組設定加進去的地方有 lib/libjsmn.a、lib/libpaho\_mqtt\_client.a、lib/iwot.a、LINKFLAGS\_eagle.app.v6、DEPENDS\_eagle.app.v6。
-
-::
-
-    #############################################################
-    # Required variables for each makefile
-    # Discard this section from all parent makefiles
-    # Expected variables (with automatic defaults):
-    #   CSRCS (all "C" files in the dir)
-    #   SUBDIRS (all subdirs with a Makefile)
-    #   GEN_LIBS - list of libs to be generated ()
-    #   GEN_IMAGES - list of object file images to be generated ()
-    #   GEN_BINS - list of binaries to be generated ()
-    #   COMPONENTS_xxx - a list of libs/objs in the form
-    #     subdir/lib to be extracted and rolled up into
-    #     a generated lib/image xxx.a ()
-    #
-    TARGET = eagle
-    #FLAVOR = release
-    FLAVOR = debug
-
-    #EXTRA_CCFLAGS += -u
-
-    ifndef PDIR # {
-    GEN_IMAGES= eagle.app.v6.out
-    GEN_BINS= eagle.app.v6.bin
-    SPECIAL_MKTARGETS=$(APP_MKTARGETS)
-    SUBDIRS=    \
-        user    \
-        driver  
-        
-    endif # } PDIR
-
-    LDDIR = $(SDK_PATH)/ld
-
-    CCFLAGS += -Os
-
-    TARGET_LDFLAGS =        \
-        -nostdlib        \
-        -Wl,-EL \
-        --longcalls \
-        --text-section-literals \
-        --force-l32
-
-    ifeq ($(FLAVOR),debug)
-        TARGET_LDFLAGS += -g -O2
-    endif
-
-    ifeq ($(FLAVOR),release)
-        TARGET_LDFLAGS += -g -O0
-    endif
-
-    dummy: all
-
-    lib/libjsmn.a: libraries/jsmn/Makefile 
-        make -C libraries/jsmn FREERTOS=yes
-
-    lib/libpaho_mqtt_client.a: libraries/paho_mqtt_client_embedded_c/Makefile 
-        make -C libraries/paho_mqtt_client_embedded_c FREERTOS=yes
-
-    lib/iwot.a: iwot/Makefile lib/libjsmn.a lib/libpaho_mqtt_client.a
-        make -C iwot FREERTOS=yes
-
-
-    COMPONENTS_eagle.app.v6 = \
-        user/libuser.a  \
-        driver/libdriver.a 
-        
-    LINKFLAGS_eagle.app.v6 = \
-        -L$(SDK_PATH)/lib        \
-        -Wl,--gc-sections   \
-        -nostdlib    \
-        -T$(LD_FILE)   \
-        -Wl,--no-check-sections    \
-        -u call_user_start    \
-        -Wl,-static                        \
-        -Wl,--start-group                    \
-        -lcirom \
-        -lcrypto    \
-        -lespconn    \
-        -lespnow    \
-        -lfreertos    \
-        -lgcc                    \
-        -lhal                    \
-        -ljson    \
-        -llwip    \
-        -lmain    \
-        -lmesh    \
-        -lmirom    \
-        -lnet80211    \
-        -lnopoll    \
-        -lphy    \
-        -lpp    \
-        -lpwm    \
-        -lsmartconfig    \
-        -lspiffs    \
-        -lssl    \
-        -lwpa    \
-        -lwps        \
-        -L./lib \
-        -ljsmn \
-        -lpaho_mqtt_client \
-        -liwot \
-        $(DEP_LIBS_eagle.app.v6)                    \
-        -Wl,--end-group
-
-    DEPENDS_eagle.app.v6 = \
-                    $(LD_FILE) \
-                    $(LDDIR)/eagle.rom.addr.v6.ld \
-                    lib/iwot.a         
-
-    #############################################################
-    # Configuration i.e. compile options etc.
-    # Target specific stuff (defines etc.) goes in here!
-    # Generally values applying to a tree are captured in the
-    #   makefile at its root level - these are then overridden
-    #   for a subtree within the makefile rooted therein
-    #
-
-    #UNIVERSAL_TARGET_DEFINES =        \
-
-    # Other potential configuration flags include:
-    #    -DTXRX_TXBUF_DEBUG
-    #    -DTXRX_RXBUF_DEBUG
-    #    -DWLAN_CONFIG_CCX
-    CONFIGURATION_DEFINES =    -DICACHE_FLASH
-    # CONFIGURATION_DEFINES =    -DICACHE_FLASH -U__STRICT_ANSI__
-
-    # ifeq ($(SPI_SIZE_MAP), 2) 
-    #   CONFIGURATION_DEFINES += -DESP01 
-    # endif 
-
-    DEFINES +=                \
-        $(UNIVERSAL_TARGET_DEFINES)    \
-        $(CONFIGURATION_DEFINES)
-
-    DDEFINES +=                \
-        $(UNIVERSAL_TARGET_DEFINES)    \
-        $(CONFIGURATION_DEFINES)
-
-
-    #############################################################
-    # Recursion Magic - Don't touch this!!
-    #
-    # Each subtree potentially has an include directory
-    #   corresponding to the common APIs applicable to modules
-    #   rooted at that subtree. Accordingly, the INCLUDE PATH
-    #   of a module can only contain the include directories up
-    #   its parent path, and not its siblings
-    #
-    # Required for each makefile to inherit from the parent
-    #
-
-    INCLUDES := $(INCLUDES) -I $(PDIR)include
-    sinclude $(SDK_PATH)/Makefile
-
-    .PHONY: FORCE
-    FORCE:
-
-此處 RTOS SDK 的 sample 有提供一個可修改參數的 bash script gen\_misc.sh 可以利用來編譯與建立程式碼 (build code)，但要先將 SDK 的路徑加入全域變數。
-
-::
-
-    XTENSA_TOOLS_ROOT=”~/tutorial/sdk/xtensa-lx106-elf/bin/”    <- Your SDK location
-    SDK_PATH=”~/tutorial/sdk/esp-rtos-sdk-1.4”                  <- Your SDK location
-    export PATH=$PATH:$XTENSA_TOOLS_ROOT 
-    export XTENSA_TOOLS_ROOT=$XTENSA_TOOLS_ROOT
-    export SDK_PATH=$SDK_PATH
-
-此時應該可以正常編譯與建立此專案。
-
-(或由 `此 <./files>`_ 下載)
 
 程式碼說明
 ----------
 
-設定 NodeMCU 連網
-~~~~~~~~~~~~~~~~~
+我們的程式進入點在 user/user_main.c 裏面的函式 main_task。
 
-接下來開啟檔案 tutorial/esp8266\_app/user/user\_main.c。
+::
 
-首先要先讓 NodeMCU 連上網路，以下必須將 wifi\_ssid、wifi\_password 換成使用者的環境設定
+ void main_task(void * pvParameters)
+ {
+   while (wait_for_network_on()) {
+
+      while (1) {
+        printf("%s \n","Hello World.");
+
+        vTaskDelay(5000 / portTICK_RATE_MS);        
+      } 
+   } 
+ }
+
+以下我們準備
+ - 將 NodeMCU 連上 wifi 。
+ - 初始化 gpio 。
+ - 引入 iWoT 。
+
+
+裝置設定 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- NodeMCU 連網 (僅須做一次) ：
+
+(如果你的 nodeMCU 曾經可以連上你的 wifi ap ，則可省略此動作。)
+ 
+在專案目錄( led_switch )下開啟編輯裝置端主程式檔案( user_main.c ) ：
+
+::
+
+ $ vi user/user_main.c。
+
+
+首先要先讓 NodeMCU 連上網路，以下必須將 your_wifi_ssid、your_wifi_password 換成使用者的環境設定
 
 ::
 
@@ -530,9 +166,31 @@ esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
         printf("[WiFi]Set wifi mode STATION_MODE");
     }
 
-並且先完成將要使用到的 GPIO 設定，這裡僅用到 D1 做輸出
+在主程式裡加上呼叫命令
 
 ::
+
+ void main_task(void * pvParameters)
+ {
+   wifi_setup();                              // <--- add update wifi settings!
+
+   while (wait_for_network_on()) {
+
+      while (1) {
+        printf("%s \n","Hello World.");
+
+        vTaskDelay(5000 / portTICK_RATE_MS);        
+      } 
+   } 
+ }
+
+- 初始化 gpio 設定 ：
+
+設定將要使用到的 GPIO 設定；這裡僅用到 D1 做輸出，其 pin 值為 5 ：
+
+::
+
+    #include "gpio.h"
 
     void gpio_init(){
         uint32 pin = 5; // D1 : GPIO 5
@@ -541,14 +199,35 @@ esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
         GPIO_AS_OUTPUT(gpio_pin_mask);  
     }
 
-
-引入 iWoT SDK
+在主程式裡加上呼叫命令
 
 ::
 
-    #include “iwot.h”
+ void main_task(void * pvParameters)
+ {
+   wifi_setup();                              // <--- add update wifi settings!
+   gpio_init();                               // <--- add update gpio settings!
 
-接下來 iWoT Device SDK 的所有動作都定義在 iwot.h 來操作。基本流程如下
+   while (wait_for_network_on()) {
+
+      while (1) {
+        printf("%s \n","Hello World.");
+
+        vTaskDelay(5000 / portTICK_RATE_MS);        
+      } 
+   } 
+ }
+
+
+- 引入 iWoT SDK
+
+::
+
+    #include "iwot.h"
+
+在 iwot.h 裏定義了 iWoT C Device SDK 的所有動作。
+
+接下來基本流程如下 ：
 
 - 準備 Web Thing Model
 - 撰寫 action handler
@@ -557,7 +236,7 @@ esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
 準備 Web Thing Model
 ~~~~~~~~~~~~~~~~~~~~
 
-每一個 iWoT 裝置都會對應到一個 Web Thing Model。Model 內的 property/action/event 用來描述此裝置的能力，裝置內部及 iWoT 規則引擎將依據 model 的描述做對應處理。
+每一個 iWoT 裝置都會對應到一個 Web Thing Model。Model 內的 property / action / event 用來描述此裝置的能力；在裝置內部以及 iWoT cloud 規則引擎將依據 model 的描述做對應的處理。
 
 本範例裝置的 model 如下 (JSON 格式)：
 
@@ -579,23 +258,26 @@ esp8266\_app/user/ 應該包含 user\_main.c 與 Makefile
     }
 
 
-以下為 C 語言字串格式 :
+以下轉為 C 語言字串格式 :
 
 ::
 
     char * modelJSON  = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
 
-稍後我們將定義此裝置的 id 為 esp\_00001，並且具備以下能力：
+我們定義此裝置類型的 classID 為 model_esp8266_led；定義此裝置的 id 為 esp\_00001；
 
-可以接受一個 actions -> switch，包含 1 個整數型態的傳入值。在本範例中我們用來指定 LED 的開關。
+並且具備以下能力：
 
-有關 Web Thing Model 的詳細說明請參閱另一份教學文件。
+ 可以接受一個 actions -> switch，其包含 1 個整數型態的傳入值 ledState : 在本範例中我們用來指定 LED 的開關。
+
+( 有關 Web Thing Model 的詳細說明請參閱另一份教學文件。 )
 
 撰寫 actions handler
 ~~~~~~~~~~~~~~~~~~~~
 
-在 model 中定義了 actions，我們還必須實作 action handler，當外部呼叫此
-action 時會交由對應的 action handler 處理。
+我們在 model 中定義了 actions，而在裝置端還必須實作出 action handler 函式；
+
+當外部呼叫此 action 時會交由對應的 action handler 處理。
 
 ::
 
@@ -624,34 +306,36 @@ action 時會交由對應的 action handler 處理。
         return 0;
     }
 
-所有的 action 都交由同一個 action handler 處理，因此必須先判斷所觸發的 action 是哪一個。以範例中的 model 為例，判斷方式為 if(0 == strcmp((\*groups)->identifier, "switch")) {...}。收到後可以由 action 參數中取得參數 ledState (key) 與其傳入值：value.integer 。
+在這裡因為所有的 actions 都交由同一個 action handler 處理，因此必須先判斷所觸發的 action 是哪一個。
 
-最後回傳 return 0 通知 iWoT 該 action 已執行完畢。
+ 以範例中的 model 為例，判斷方式為比較 identifier 是否為 model 中定義的 "switch"。然後可以由 action 參數中取得參數 ledState (key) 與其傳入值：value.integer 。
+
+最後回傳 return 0 通知 iWoT 該 action handler 已執行完畢。
 
 初始化並建立連線
 ~~~~~~~~~~~~~~~~
 
-上述的 model、和相關 handler 準備好之後就可以進行初始化並建立連線
+上述的 model ( modelJSON )、和相關 handler 準備好之後就可以進行初始化並建立連線 ：
 
 ::
 
-    THING *thing = 0;
-    IWOTCONFIG *iwotConfig = 0;
+ THING *thing = 0; 
 
+ int connect_iWoT()
+ {
     char *host = "dev.iwot.io";
     char *accessKey = "your_access_key";
     char *secretKey = "your_secret_key";
 
-    char * modelJSON  = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"name\":\"LED Light Switch\",\"description\":\"Set esp8266 LED light on/off\",\"values\":{\"ledState\":{\"name\":\"LED State\",\"description\":\"LED state\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":1}}}}}";
+    IWOTCONFIG *iwotConfig = 0;
+    IWOTERRORCODE ec = IWOT_EC_SUCCESS;
+    char *modelJSON = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch \":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
 
-    if(IWOT_EC_SUCCESS != iwot_util_create_config(
-        accessKey, secretKey, host,  0, 
-        modelJSON, 0, &iwotConfig)){
-
+    if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, 0, &iwotConfig)) {
         return 0;
-    }    
+    }
 
-    if(IWOT_EC_SUCCESS != iwot_thing_init(iwotConfig, &thing)) {    
+    if(IWOT_EC_SUCCESS != iwot_thing_init(iwotConfig, &thing)) {
         return 0;
     }
 
@@ -661,9 +345,39 @@ action 時會交由對應的 action handler 處理。
         return 0;
     }
 
-首先產生 iwotConfig 用來作為初始化所需資訊；accessKey 跟 secretKey 請填入一開始準備開發環境時取得的 *開發者金鑰*。host 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+    return 1;
+ }
 
-初始化成功之後呼叫 iwot\_thing\_connect() 並傳入前一節準備的 handler。
+首先建立一個全域指標變數 thing ，此為我們的 iWoT 客戶端。
+ 
+再藉由 iwot_util_create_config 加入我們的設定產生 iwotConfig 用來作為初始化 iwot_thing_init 所需資訊 ：
+
+ accessKey 跟 secretKey 請填入一開始準備開發環境時取得的 *開發者金鑰*。
+
+ host 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+
+呼叫 iwot_thing_init 初始化成功之後，呼叫 iwot_thing_connect() 並傳入前一節準備的各個 handler 開始對 iWoT cloud 做連接的動作。
+
+::
+
+ void main_task(void * pvParameters)
+ {
+    // wifi_setup();                              // <--- add update wifi settings!
+    gpio_init();                                // <--- add update gpio settings!
+
+    while (wait_for_network_on()) {
+
+        if (connect_iWoT()) {                   // <--- add connect to iWoT!
+
+            while (1) {
+                printf("%s \n","Hello World.");
+
+                vTaskDelay(5000 / portTICK_RATE_MS);        
+            } 
+        }
+    } 
+ }
+
 
 完整的 user\_main.c 程式碼
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -744,21 +458,26 @@ action 時會交由對應的 action handler 處理。
         if (STATION_GOT_IP == sta_stat) {
             onLine = 1;
         }
-    // printf("[WiFi][Done]Network status %d\n", sta_stat);
+
         return onLine;
     }
 
     void iwot_task(void * pvParameters)
     {
-        while (wait_for_network_on()) {
-            printf("%s \n","MQTT connecting...");
-            if(connect_iWoT()) {
-                printf("%s \n","MQTT connected.");
-                while (1) {
-                    vTaskDelay(5000 / portTICK_RATE_MS);
-                }
-            }
+      wifi_setup();                               // <--- add update wifi settings!
+      gpio_init();                                // <--- add update gpio settings!
+
+      while (wait_for_network_on()) {
+
+          if (connect_iWoT()) {                   // <--- add connect to iWoT!
+
+            while (1) {
+                printf("%s \n","Hello World.");
+
+                vTaskDelay(5000 / portTICK_RATE_MS);        
+            } 
         }
+      } 
     }
 
     void gpio_init() {
@@ -780,65 +499,41 @@ action 時會交由對應的 action handler 處理。
     {
         printf("SDK version:%s,%u\n", system_get_sdk_version(),__LINE__ );
 
-        // Connect to internet.
-        wifi_setup();
-        // Init gpio.
-        gpio_init();
-        // GPIO_OUTPUT(GPIO_Pin_5, 1);
-
         // Create main task.
         xTaskCreate(iwot_task, "IWOT_TASK", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
+    }
+
+    uint32 user_rf_cal_sector_set(void)
+    {
+        // or keep original code here.
+        return 0;
     }
 
 執行結果
 --------
 
 使用命令列編譯並燒錄至 ESP8266 執行
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-編譯指令 :
-
-::
-
-    $ cd tutorial/esp8266_app/
-
-為編譯命令腳本 gen_misc.sh 加入環境變數 :
+編譯指令執行 :
 
 ::
 
-    XTENSA_TOOLS_ROOT=$PWD/../sdk/xtensa-lx106-elf/bin/
-    SDK_PATH=$PWD/../sdk/esp-rtos-sdk-1.4
+    $ sh build.sh
 
-    export PATH=$PATH:$XTENSA_TOOLS_ROOT 
-    export XTENSA_TOOLS_ROOT=$XTENSA_TOOLS_ROOT
-    export SDK_PATH=$SDK_PATH
-    export BIN_PATH=./bin
-
-執行 :
+燒錄指令 (將利用 gtkterm 接收NodeMCU輸出結果，需要 sudo 權限) :
 
 ::
 
-    $ sh gen_misc.sh
+    $ sh burn.sh -a
 
-燒錄指令 :
-
-::
-
-    $ cd tutorial/
-    $ python EspTools/script\_smp/esptool.py -p /dev/ttyUSB0 write\_flash --flash\_mode qio --flash\_size 32m-c1 0x0 esp8266\_app/bin/eagle.flash.bin 0x20000 esp8266\_app/bin/eagle.irom0text.bin
-
-利用 gtkterm (需要用sudo)接收NodeMCU輸出結果如下：
-
-::
-
-    $ sudo gtkterm --port /dev/ttyUSB0 --speed 115200
 
 |3|
 
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <http://dev.iwot.io>`_，可以看到此裝置已上線
 
 |4|
 
@@ -889,9 +584,9 @@ Tutorial (Full with SDK and Tools): tutorial.tar.gz
 裝置程式沒有輸出 MQTT connected 訊息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-請確認wifi連線正常。
+請確認 wifi 連線正常。
 
-請確認modelJSON 字串內容是正確的；網路上的工具可以幫忙方便檢視，如 `Json Parser Online <http://json.parser.online.fr/>`_。
+請確認 modelJSON 字串內容是正確的；網路上的工具可以幫忙方便檢視，如 `Json Parser Online <http://json.parser.online.fr/>`_。
 
 請核對 accessKey 及 secretKey 是否正確，並確認 host 指向正確位址。
 
@@ -906,10 +601,19 @@ Tutorial (Full with SDK and Tools): tutorial.tar.gz
 
     $ cd tutorial/sdk/xtensa-lx106-elf/libexec/gcc/xtensa-lx106-elf/4.8.5/
     $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so
-    $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so.0
-    
+    $ ln -s liblto\_plugin.so.0.0.0 liblto\_plugin.so.0
+
+
 執行時期錯誤
 ~~~~~~~~~~~~
+
+燒錄前可先確認裝置是否存在：
+
+::
+
+ $ ls /dev/ttyUSB0
+ /dev/ttyUSB0
+
 若發生程式crash在以下狀態
 
 ::
@@ -943,10 +647,10 @@ Global Rule Engine 的頁籤沒有顯示預期中的資料
 .. |1| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/1.jpg
 .. |2| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/2.png
 .. |3| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/3.png
-.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.png
-.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.png
-.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.png
-.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.png
-.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.png
-.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.png
+.. |4| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/4.png
+.. |5| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/5.png
+.. |6| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/6.png
+.. |7| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/7.png
+.. |8| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/8.png
+.. |9| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/9.png
 .. |10| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/esp8266_sdk/images/10.jpg
