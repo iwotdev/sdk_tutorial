@@ -62,7 +62,7 @@ LED 傳感器一枚
 
 ::
 
-    $ wget http://192.168.22.3:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
+    $ wget http://dev.iwot.io:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
 
 查看 libraries 目錄可以看到以下結構 :
 
@@ -471,8 +471,8 @@ LED 傳感器一枚
 
           if (connect_iWoT()) {                   // <--- add connect to iWoT!
 
+            printf("%s \n","Hello World.");
             while (1) {
-                printf("%s \n","Hello World.");
 
                 vTaskDelay(5000 / portTICK_RATE_MS);        
             } 
@@ -561,20 +561,6 @@ LED 傳感器一枚
 --------
 
 可以到 `此 <./files>`_ 下載專案相關檔案。
-
-RTOS SDK : esp8266\_rtos\_sdk\_1.4.x.tar.gz
-
-Tool Chain : xtensa-lx106-elf.tar.gz
-
-Burn Tool : EspTools.tar.gz
-
-iWoT SDK : iwot.tar.gz
-
-iWoT SDK dependency libraries : libraries.tar.gz
-
-Sample project : esp8266\_app.tar.gz
-
-Tutorial (Full with SDK and Tools): tutorial.tar.gz
 
 
 
