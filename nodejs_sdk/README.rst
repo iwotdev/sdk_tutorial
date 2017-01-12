@@ -10,7 +10,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 
 1. 安裝 `Node.JS <https://nodejs.org/en/download/>`_
 2. 下載並解壓縮 `iWoT Node.JS SDK <https://dev.iwot.io/#/web/sdks>`_
-3. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
+3. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_
 4. 建立目錄結構
 
 ::

@@ -12,10 +12,10 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 
 1. 安裝 `Android Studio <https://developer.android.com/studio/index.html>`_
 2. 下載 `iWoT Android SDK <http://dev.iwot.io/#/web/sdks>`_
-3. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)
-4. 建立一個顯示Accelerometer數值的專案。流程如下
+3. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_
+4. 建立一個顯示 Accelerometer 數值的專案。流程如下
 
-首先修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟Accelerometer 數值的顯示
+首先修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
 
 ::
 
@@ -104,8 +104,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
             s_paused = (Switch) findViewById(R.id.paused);
             s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     paused = isChecked;
                 }
             });        
@@ -228,60 +227,68 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 
 ::
 
-            new Thing.IThingListener() {
-                @Override
-                public void onConnect() {
-                    Log.v("[iWoT]", "onConnect");
-                    connected = true;
-                }
+    new Thing.IThingListener() {
+        @Override
+        public void onConnect() {
+            Log.v("[iWoT]", "onConnect");
+            connected = true;
+        }
 
-                @Override
-                public void onReconnect() {
-                    Log.v("[iWoT]", "onReconnect");
-                }
+        @Override
+        public void onReconnect() {
+            Log.v("[iWoT]", "onReconnect");
+        }
 
-                @Override
-                public void onOffline() {
-                    Log.v("[iWoT]", "onOffline");
-                    connected = false;
-                }
+        @Override
+        public void onOffline() {
+            Log.v("[iWoT]", "onOffline");
+            connected = false;
+        }
 
-                @Override
-                public void onClose() {
-                    Log.v("[iWoT]", "onClose");
-                    connected = false;
-                }
+        @Override
+        public void onClose() {
+            Log.v("[iWoT]", "onClose");
+            connected = false;
+        }
 
-                @Override
-                public boolean onActions(Model.VarObject var) {
-                    Log.v("iWoT", "onActions");
-                    return true;
-                }
+        @Override
+        public boolean onActions(Model.VarObject var) {
+            Log.v("iWoT", "onActions");
+            return true;
+        }
 
-                @Override
-                public boolean onProperties(Model.VarObject var) {
-                    Log.v("iWoT", "onProperties");
-                    return true;
-                }
+        @Override
+        public boolean onProperties(Model.VarObject var) {
+            Log.v("iWoT", "onProperties");
+            return true;
+        }
 
-                @Override
-                public boolean onSystems(Model.VarObject var) {
-                    Log.v("iWoT", "onSystems");
-                    return true;
-                }
+        @Override
+        public boolean onSystems(Model.VarObject var) {
+            Log.v("iWoT", "onSystems");
+            return true;
+        }
 
-                @Override
-                public void onError(String s) {
-                    Log.v("[iWoT]", "onError: " + s);
-                }
-            }
+        @Override
+        public void onError(String s) {
+            Log.v("[iWoT]", "onError: " + s);
+        }
+    }
 
 當連線狀態發生變化時，SDK 會觸發對應的 callback，裝置程式可以經由這些 callback 取得目前的連線狀態。 *網路斷線時 SDK 會自動嘗試重新建立連線，您不需要在 callback 中手動重建連線。*
 
 實作發送 event 及更新 property 至 iWoT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在收到 ``onConnect`` callback 之後就可以開始與 iWoT 的訊息傳遞。首先將Accelerometer的數值，以 event 的形式發送出去，所以我們修改 ``onSensorChanged`` 的callback，先根據使用者透過action所決定的precision來修改Accelerometer數值的精準度，然後串成一個JSON字串，接著透過 ``Model.parseVarObject`` 將此JSON字串轉成物件形式，最後透過 ``thing.emitEvents`` 將此event發送出去
+在收到 ``onConnect`` callback 之後將 ``connected`` 設定成 ``true``，然後就開始與 iWoT 的訊息傳遞。第一步是將 Accelerometer 的數值，以 event 的形式發送出去。event 的訊息傳遞方向為裝置端到 iWoT，使用以下的 API
+
+::
+
+    thing.emitEvents(var);
+
+其中 var 參數為 event 內容。這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是 **帶有三個浮點數值的 ``orientation``**。這個參數是 ``Model.VarObject`` 的物件形式，你可以透過 ``Model.parseVarObject`` 來將一個 JSON 字串轉換成此物件形式，或是自行以 ``new`` 的方式來建立，關於第二種方式，在下面提及 property 時會有範例。
+
+本範例發送 event 的動作實作在 ``onSensorChanged`` callback 中，在每次更新 Accelerometer 時，如果已連上 iWoT，會先根據 precision (使用者可透過 action 設定) 來修改 Accelerometer 數值的精準度，然後串成一個 JSON 字串，接著透過 ``Model.parseVarObject`` 將此 JSON 字串轉成物件型態，最後透過 ``thing.emitEvents()`` 將此 event 發送出去。
 
 ::
 
@@ -309,96 +316,89 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
             }
         }
 
-event 的訊息傳遞方向為裝置端到 iWoT。
+接下來說明如何更新 property。property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 iWoT shadow device 設定裝置端的 property；或是裝置內部更新完之後發出 property changed 通知 iWoT shadow device。後者使用以下 API
 
 ::
 
-    thing.emitEvents(var, 0, true);
+    thing.publishProperties(delta);
 
-其中 var 參數為 event 內容。這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是\ **帶有三個浮點數值的 ``orientation``**。這個參數是 ``Model.VarObject`` 的物件形式，你可以透過 ``Model.parseVarObject`` 來將一個 JSON 字串轉換成此物件形式，或是自行以 ``new`` 的方式來建立，關於第二種方式，在下面提及 property 時會有範例。
+其中 delta 參數為 property 內容。同樣的，這個 property 必須包含在此裝置的 model 當中。如果有多個 property，delta 可以只包含其中一個或部分 property。
 
-接下來，我們用property -> ``pause`` 表示 pause 開關的裝態，並在狀態改變的時候將新的狀態發送出去。所以我們修改 Switch 的callback，在 ``onCheckedChanged`` 裡面先建立一個 ``Model.VarObject`` 的物件，這裡我們使用 ``new`` 的方式來建立。在iWoT SDK，我們使用 ``Model.VarObject`` 來描述property，event或是action所帶的參數。每個 ``Model.VarObject`` 只能描述property，event或是action其中的一種，不能混用，所以在這個例子，我們在 ``Model.VarObject`` 的初始化參數填上 "property"。而一個 ``Model.VarObject`` 裡面可以有數個 ``Model.VarGroup`` ，每個 ``Model.VarGroup`` 表示一個 property，一個 event 或是一個 action。在這個例子，就是 "pause"。而一個 ``Model.VarGroup`` 裡面還可以有數個 ``Model.VarItem`` ，每個 ``Model.VarItem`` 表示一個 property 的一組 value，這組 value 是以一個 key-value 的形式來描述，在這個例子，key 就是 "paused"，而 value 就是一個表示 pause 開關的裝態的 boolean 值。由於這個過程有點繁瑣，所以我們建立一個 ``createSingleProperty`` 的 function 來輔助我們建立這個 ``Model.VarObject``，最後再透過 ``thing.publishProperties`` 將此 property 發送出去。
+本範例使用 property -> ``pause`` 表示 pause 開關的狀態，並在狀態改變時將新的狀態通知 iWoT。
+
+我們修改 Switch 的 callback，在 ``onCheckedChanged`` 裡面建立一個 ``Model.VarObject`` 的物件，這裡示範使用 ``new`` 的方式來建立。在 iWoT Android SDK，property、event 及 action 的參數型態為 ``Model.VarObject``。每個 ``Model.VarObject`` 只能描述 property、event 或是 action 其中一種，不能混用，所以在這個例子，我們在 ``Model.VarObject`` 的初始化參數填上 "properties" 關鍵字。而一個 ``Model.VarObject`` 裡面可以有數個 ``Model.VarGroup``，每個 ``Model.VarGroup`` 表示一個 property。在這個例子，就是 "pause"。而一個 ``Model.VarGroup`` 裡面還可以有數個 ``Model.VarItem``，每個 ``Model.VarItem`` 表示一個 property 的一組 value，這組 value 是以一個 key-value pair 的形式來描述，在這個例子，key 就是 "paused"，而 value 就是一個表示 pause 開關的狀態的 boolean 值。由於這個過程有點繁瑣，所以我們實作一個 ``createSingleProperty`` function 來建立這個 ``Model.VarObject``，最後再透過 ``thing.publishProperties()`` 將此 property 發送出去。
 
 ::
 
-        private Model.VarObject createSingleProperty(String property, String key, boolean enabled) {
-            ArrayList items = new ArrayList();
-            items.add(new Model.VarItem(key, new Boolean(enabled)));
+    private Model.VarObject createSingleProperty(String property, String key, boolean enabled) {
+        ArrayList items = new ArrayList();
+        items.add(new Model.VarItem(key, new Boolean(enabled)));
 
-            ArrayList groups = new ArrayList();
-            groups.add(new Model.VarGroup(property, items, null, null, null));
+        ArrayList groups = new ArrayList();
+        groups.add(new Model.VarGroup(property, items, null, null, null));
 
-            return new Model.VarObject("properties", groups);
+        return new Model.VarObject("properties", groups);
+    }
+
+    s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            paused = isChecked;
+            if (null != thing && connected) {
+                Model.VarObject delta = createSingleProperty("pause", "paused", paused);
+                thing.publishProperties(delta);
+            }
         }
-
-            s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
-                    paused = isChecked;
-                    if (null != thing && connected) {
-                        Model.VarObject property = createSingleProperty("pause", "paused", paused);
-                        thing.publishProperties(property);
-                    }
-                }
-            });
-
-property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 iWoT shadow device 設定裝置端的 property；或是裝置內部更新完之後發出 property changed 通知 iWoT shadow device。上述程式碼實作了後者，每當 ``pause`` 改變就更新到 iWoT shadow device 上
-
-::
-
-    thing.publishProperties(property);
-
-其中 property 參數為 property 內容，同樣的，這個 property 必須包含在此裝置的 model 當中。如果有多個 property，delta 可以只包含其中一個或部分 property。
+    });
 
 撰寫 action/properties handler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果 model 中定義了 action，我們還必須實作 action handler，當外部呼叫此 action 時會交由對應的 action handler 處理。實作 action handler 就是 override ``Thing.IThingListener`` 的 ``onActions``
+如果 model 中定義了 action，我們還必須實作 action handler，當外部呼叫此 action 時會交由對應的 action handler 處理。實作 action handler 就是 override ``Thing.IThingListener`` 的 ``onActions``。
 
 ::
 
-                @Override
-                public boolean onActions(Model.VarObject var) {
-                    Log.v("iWoT", "onActions");
-                    for (Model.VarGroup vg : var.groups) {
-                        if ("precision".equals(vg.identifier)) {
-                            for (Model.VarItem vi : vg.items) {
-                                if ("decimal".equals(vi.key)) {
-                                    precision = (int) Math.pow(10, vi.numValue.intValue());
-                                }
-                            }
-                        }
+    @Override
+    public boolean onActions(Model.VarObject var) {
+        Log.v("iWoT", "onActions");
+        for (Model.VarGroup vg : var.groups) {
+            if ("precision".equals(vg.identifier)) {
+                for (Model.VarItem vi : vg.items) {
+                    if ("decimal".equals(vi.key)) {
+                        precision = (int) Math.pow(10, vi.numValue.intValue());
                     }
-
-                    return true;
                 }
+            }
+        }
+
+        return true;
+    }
 
 所有的 action 都交由同一個 action handler 處理，因此必須先判斷所觸發的 action 是哪一個。以範例中的 model 為例，判斷方式為 ``Model.VarGroup.identifier`` 等於 "precision" 而且 ``Model.VarItem.key`` 等於 "decimal"。收到後可以由 action 參數中取得傳入值： ``vi.numValue.intValue``。
 
-最後 ``return true`` 通知 iWoT 該 action 已執行完畢。 *請注意，若執行結果為失敗，請 ``return false`` ，如此 iWoT 會紀錄該 action 的執行結果為失敗。*
+最後回傳 ``true`` 通知 iWoT 該 action 已執行完畢。 *請注意，若執行結果為失敗，必須回傳 ``false``，如此 iWoT 會紀錄該 action 的執行結果為失敗。*
 
-前一節提到 property 訊息傳遞方向是雙向的，如果有來自裝置外部要求設定 property 的需求，則必須實作 properties handler。實作properties handler 就是 override ``Thing.IThingListener`` 的 ``onProperties``
+前一節提到 property 訊息傳遞方向是雙向的，如果有來自裝置外部要求設定 property 的需求，則必須實作 properties handler。實作properties handler 就是 override ``Thing.IThingListener`` 的 ``onProperties``。
 
 ::
 
-                @Override
-                public boolean onProperties(Model.VarObject var) {
-                    Log.v("iWoT", "onProperties");
-                    for (Model.VarGroup group : var.groups) {
-                        for (Model.VarItem item : group.items) {
-                            if (group.identifier.equals("pause") && item.key.equals("paused")) {
-                                s_paused.setChecked(item.boolValue);
-                            }
-                        }
-                    }
-
-                    return true;
+    @Override
+    public boolean onProperties(Model.VarObject var) {
+        Log.v("iWoT", "onProperties");
+        for (Model.VarGroup group : var.groups) {
+            for (Model.VarItem item : group.items) {
+                if (group.identifier.equals("pause") && item.key.equals("paused")) {
+                    s_paused.setChecked(item.boolValue);
                 }
+            }
+        }
+
+        return true;
+    }
 
 同樣的，所有設定 property 的要求都交由同一個 handler 處理，因此必須先判斷要設定的 property 是哪一個。以範例中的 model 為例，判斷方式為 ``Model.VarGroup.identifier`` 等於 "pause" 而且 ``Model.VarItem.key`` 等於 "paused"。設定值可以由 ``item.boolValue`` 取得。
 
-最後也必須 ``return true`` 或是 ``return false`` 來通知 iWoT 該 property 的設定成功與否。
+最後也必須回傳 ``true`` 或是 ``false`` 來通知 iWoT 該 property 的設定成功與否。
 
 初始化並建立連線
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,26 +407,26 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
 
 ::
 
-        private void connectIWoT() {
-            String modelJSON = "{\"id\":\"iwot_android_thing_1\",\"classID\":\"iwot_android_thing_model\",\"name\":\"iWoT Android Thing\",\"properties\":{\"pause\":{\"name\":\"Pause or Resume Sensors\",\"values\":{\"paused\":{\"type\":\"boolean\"}}}},\"actions\":{\"precision\":{\"name\":\"Set Precision\",\"values\":{\"decimal\":{\"description\":\"decimal places\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":5,\"required\":true}}}},\"events\":{\"orientation\":{\"name\":\"Orientation Sensor\",\"values\":{\"x\":{\"type\":\"float\"},\"y\":{\"type\":\"float\"},\"z\":{\"type\":\"float\"}}}}}";
-            String host = "dev.iwot.io";
-            String accessKey = "[your_access_key]";
-            String secretKey = "[your_secret_key]";
-            int keepAlive = 60;
-            Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
+    private void connectIWoT() {
+        String modelJSON = "{\"id\":\"iwot_android_thing_1\",\"classID\":\"iwot_android_thing_model\",\"name\":\"iWoT Android Thing\",\"properties\":{\"pause\":{\"name\":\"Pause or Resume Sensors\",\"values\":{\"paused\":{\"type\":\"boolean\"}}}},\"actions\":{\"precision\":{\"name\":\"Set Precision\",\"values\":{\"decimal\":{\"description\":\"decimal places\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":5,\"required\":true}}}},\"events\":{\"orientation\":{\"name\":\"Orientation Sensor\",\"values\":{\"x\":{\"type\":\"float\"},\"y\":{\"type\":\"float\"},\"z\":{\"type\":\"float\"}}}}}";
+        String host = "dev.iwot.io";
+        String accessKey = "[your_access_key]";
+        String secretKey = "[your_secret_key]";
+        int keepAlive = 60;
+        Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
 
-            Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
-            thing = new Thing();
-            if (!thing.init(config)) {
-                Log.v("[iWoT]", "Fail to init iWoT SDK");
-                return;
-            }
-            thing.connect(getApplicationContext(), new Thing.IThingListener() {
-                .............
-            });        
+        Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
+        thing = new Thing();
+        if (!thing.init(config)) {
+            Log.v("[iWoT]", "Fail to init iWoT SDK");
+            return;
         }
+        thing.connect(getApplicationContext(), new Thing.IThingListener() {
+            .............
+        });        
+    }
 
-``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是前一節的 model 經過 stringify 後的字串。 ``keepAlive`` 是本裝置與iWoT Cloud 保持連線的時間，詳細說明請參閱另一份教學文件，在此設定為 60 秒。 ``defaultProperties`` 是本裝置初始的 Properties，在此填入 pause 開關的初始狀態。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是本範例 model 的字串型態。 ``keepAlive`` 是本裝置與iWoT Cloud 更新連線的間隔時間，詳細說明請參閱 API 文件，在此設定為 60 秒。 ``defaultProperties`` 是本裝置初始的 Properties，在此填入 pause 開關的初始狀態。
 
 初始化成功之後呼叫 ``thing.connect()`` 並傳入 context 與前一節準備的 callback 及 handler。
 
@@ -465,12 +465,11 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
             s_paused = (Switch) findViewById(R.id.paused);
             s_paused.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     paused = isChecked;
                     if (null != thing && connected) {
-                        Model.VarObject property = createSingleProperty("pause", "paused", paused);
-                        thing.publishProperties(property);
+                        Model.VarObject delta = createSingleProperty("pause", "paused", paused);
+                        thing.publishProperties(delta);
                     }
                 }
             });
@@ -648,14 +647,14 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
 
 |建立規則四|
 
-按下 ``true`` 或是\ ``false`` 的 inject 元件後，iWoT 會呼叫裝置的 ``onProperties()`` 並傳入 var 物件，其中 item.boolValue 參數值為 ``true``\ 或是\ ``false``\ 。依照 ``onProperties()`` 的實作，會將pause的開關設定為開或是關，另外，也會暫停或是開始發送Accelerometer的數值到iWoT
+按下 ``true`` 或是\ ``false`` 的 inject 元件後，iWoT 會呼叫裝置的 ``onProperties()`` 並傳入 var 物件，其中 item.boolValue 參數值為 ``true``\ 或是\ ``false``\ 。依照 ``onProperties()`` 的實作，會將pause的開關設定為開或是關，另外，也會暫停或是開始發送Accelerometer 的數值到 iWoT
 
 |Pause Resume|
 
 常見問題
 --------
 
-在iWoT Cloud看不到此裝置
+在 iWoT Cloud 看不到此裝置
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 請核對 ``accessKey`` 及 ``secretKey`` 是否正確，並確認 ``host`` 指向正確位址。
