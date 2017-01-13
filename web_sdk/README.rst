@@ -8,8 +8,8 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 準備開發環境
 ------------
 
-1. 下載 `iWoT Web SDK <https://dev.iwot.io/#/web/sdks>`_
-2. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_
+1. 下載 `iWoT Web SDK <https://rc2.iwot.io/#/web/sdks>`_
+2. 取得 `開發者金鑰 <https://rc2.iwot.io/#/web/sdks>`_
 3. 建立目錄結構
 
 ::
@@ -212,7 +212,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
         model: JSON.parse(JSON.stringify(model)),
         accessKey: '[your_access_key]',
         secretKey: '[your_secret_key]',
-        host: 'dev.iwot.io'
+        host: 'rc2.iwot.io'
     }, function (err) {
         if (!err) {
             thing.connect({
@@ -221,7 +221,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
         }
     });
 
-``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io* ，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *rc2.iwot.io* ，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
 
 初始化成功之後呼叫 ``thing.connect()`` 並傳入前一節準備的 action handler。
 
@@ -360,7 +360,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
         model: JSON.parse(JSON.stringify(model)),
         accessKey: '[your_access_key]',
         secretKey: '[your_secret_key]',
-        host: 'dev.iwot.io'
+        host: 'rc2.iwot.io'
     }, function (err) {
         if (!err) {
             thing.connect({
@@ -434,7 +434,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <https://rc2.iwot.io>`_，可以看到此裝置已上線
 
 |裝置已連線|
 

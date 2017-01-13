@@ -9,8 +9,8 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 ------------
 
 1. 安裝 `Node.JS <https://nodejs.org/en/download/>`_
-2. 下載並解壓縮 `iWoT Node.JS SDK <https://dev.iwot.io/#/web/sdks>`_
-3. 取得 `開發者金鑰 <https://dev.iwot.io/#/web/sdks>`_
+2. 下載並解壓縮 `iWoT Node.JS SDK <https://rc2.iwot.io/#/web/sdks>`_
+3. 取得 `開發者金鑰 <https://rc2.iwot.io/#/web/sdks>`_
 4. 建立目錄結構
 
 ::
@@ -221,7 +221,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
         model: JSON.parse(JSON.stringify(model)),
         accessKey: '[your_access_key]',
         secretKey: '[your_secret_key]',
-        host: 'dev.iwot.io'
+        host: 'rc2.iwot.io'
     }, function (err) {
         if (!err) {
             thing.connect({
@@ -231,7 +231,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
         }
     });
 
-``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *rc2.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
 
 初始化成功之後呼叫 ``thing.connect()`` 並傳入前一節準備的 handler。
 
@@ -350,7 +350,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
         model: JSON.parse(JSON.stringify(model)),
         accessKey: '[your_access_key]',
         secretKey: '[your_secret_key]',
-        host: 'dev.iwot.io'
+        host: 'rc2.iwot.io'
     }, function (err) {
         if (!err) {
             thing.connect({
@@ -384,7 +384,7 @@ property 的訊息傳遞方向是雙向的，可能會由外部觸發，經由 i
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <https://rc2.iwot.io>`_，可以看到此裝置已上線
 
 |裝置已連線|
 

@@ -8,7 +8,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 申請帳號
 --------
 
-請先於 `iWoT <http://dev.iwot.io>`_ 網頁申請帳號，並取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)。
+請先於 `iWoT <http://rc2.iwot.io>`_ 網頁申請帳號，並取得 `開發者金鑰 <http://rc2.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)。
 
 硬體
 ----
@@ -62,7 +62,7 @@ LED 傳感器一枚
 
 ::
 
-    $ wget http://dev.iwot.io:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
+    $ wget http://rc2.iwot.io:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
 
 查看 libraries 目錄可以看到以下結構 :
 
@@ -323,7 +323,7 @@ LED 傳感器一枚
 
  int connect_iWoT()
  {
-    char *host = "dev.iwot.io";
+    char *host = "rc2.iwot.io";
     char *accessKey = "your_access_key";
     char *secretKey = "your_secret_key";
 
@@ -354,7 +354,7 @@ LED 傳感器一枚
 
  accessKey 跟 secretKey 請填入一開始準備開發環境時取得的 *開發者金鑰*。
 
- host 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
+ host 預設為 *rc2.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。
 
 呼叫 iwot_thing_init 初始化成功之後，呼叫 iwot_thing_connect() 並傳入前一節準備的各個 handler 開始對 iWoT cloud 做連接的動作。
 
@@ -420,7 +420,7 @@ LED 傳感器一枚
 
     int connect_iWoT()
     {
-        char *host = "dev.iwot.io";
+        char *host = "rc2.iwot.io";
         char *accessKey = "your_access_key";
         char *secretKey = "your_secret_key";
 
@@ -533,7 +533,7 @@ LED 傳感器一枚
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <http://dev.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <http://rc2.iwot.io>`_，可以看到此裝置已上線
 
 |4|
 
