@@ -11,8 +11,8 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 ------------
 
 1. 安裝 `Android Studio <https://developer.android.com/studio/index.html>`_
-2. 下載 `iWoT Android SDK <http://dev.iwot.io/#/web/sdks>`_
-3. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_
+2. 下載 `iWoT Android SDK <http://rc2.iwot.io/#/web/sdks>`_
+3. 取得 `開發者金鑰 <http://rc2.iwot.io/#/web/sdks>`_
 4. 建立一個顯示 Accelerometer 數值的專案。流程如下
 
 首先建立一個 Android Studio 的新專案。在這個示範，我們使用的是 Android Studio 2.2.3 的版本。請選擇 Start a new Android Studio project。
@@ -445,7 +445,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
     private void connectIWoT() {
         String modelJSON = "{\"id\":\"iwot_android_thing_1\",\"classID\":\"iwot_android_thing_model\",\"name\":\"iWoT Android Thing\",\"properties\":{\"pause\":{\"name\":\"Pause or Resume Sensors\",\"values\":{\"paused\":{\"type\":\"boolean\"}}}},\"actions\":{\"precision\":{\"name\":\"Set Precision\",\"values\":{\"decimal\":{\"description\":\"decimal places\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":5,\"required\":true}}}},\"events\":{\"orientation\":{\"name\":\"Orientation Sensor\",\"values\":{\"x\":{\"type\":\"float\"},\"y\":{\"type\":\"float\"},\"z\":{\"type\":\"float\"}}}}}";
-        String host = "dev.iwot.io";
+        String host = "rc2.iwot.io";
         String accessKey = "[your_access_key]";
         String secretKey = "[your_secret_key]";
         int keepAlive = 60;
@@ -462,7 +462,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
         });        
     }
 
-``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *dev.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是本範例 model 的字串型態。 ``keepAlive`` 是本裝置與iWoT Cloud 更新連線的間隔時間，詳細說明請參閱 API 文件，在此設定為 60 秒。 ``defaultProperties`` 是本裝置初始的 Properties，在此填入 pause 開關的初始狀態。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *rc2.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是本範例 model 的字串型態。 ``keepAlive`` 是本裝置與iWoT Cloud 更新連線的間隔時間，詳細說明請參閱 API 文件，在此設定為 60 秒。 ``defaultProperties`` 是本裝置初始的 Properties，在此填入 pause 開關的初始狀態。
 
 初始化成功之後呼叫 ``thing.connect()`` 並傳入 context 與前一節準備的 callback 及 handler。
 
@@ -635,7 +635,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <https://dev.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <https://rc2.iwot.io>`_，可以看到此裝置已上線
 
 |裝置已連線|
 
