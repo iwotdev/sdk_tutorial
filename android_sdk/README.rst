@@ -15,7 +15,43 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 3. 取得 `開發者金鑰 <http://dev.iwot.io/#/web/sdks>`_
 4. 建立一個顯示 Accelerometer 數值的專案。流程如下
 
-首先修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
+首先建立一個 Android Studio 的新專案。在這個示範，我們使用的是 Android Studio 2.2.3 的版本。請選擇 Start a new Android Studio project。
+
+|建立專案畫面一|
+
+接著，在 Application Name 及 Company Domain 填上適當的名稱，然後按下 Next。
+
+|建立專案畫面二|
+
+Target Android Devices 的部份，我們選擇 Phone and Tablet，而 Minimum SDK 請使用 API 19 以上的選項，然後按下 Next。
+
+|建立專案畫面三|
+
+然後選擇 Empty Activity，按下 Next。
+
+|建立專案畫面四|
+
+最後，接受預設值，按下 Finish，就完成了這個新專案的建立。
+
+|建立專案畫面五|
+
+有了專案之後，接著我們就要把 iWoT Android SDK 加入此專案中。首先把下載回來的 SDK(iwot-sdk.aar) 複製一份到專案目錄的 app\libs\ 下。然後從上層選單選擇 File -> New -> New Module 開啟對話框，然後選擇 Import .JAR/.AAR Package，按下Next。
+
+|Import Library一|
+
+接著按下 ... 選擇上一步所複製進專案目錄的 SDK，按下 OK，就可以將 SDK 匯入到專案中了，最後按下Next，回到主畫面。
+
+|Import Library二|
+
+這時候，Android Studio 會提示說 Gradle files 已經改變了，需要做 Sync。所以按下 Sync Now，或是工具列的 Sync Project with Gradle Files 也可以。
+
+|Import Library三|
+
+Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module，此時，就可以開始使用 SDK 所提供的 API 了。
+
+|Import Library四|
+
+接著開始修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
 
 ::
 
@@ -678,4 +714,13 @@ Global Rule Engine 的 debug 頁籤沒有顯示預期中的資料
 .. |Set Precision| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/7.png
 .. |建立規則四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/8.png
 .. |Pause Resume| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/9.png
+.. |建立專案畫面一| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/10.png
+.. |建立專案畫面二| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/11.png
+.. |建立專案畫面三| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/12.png
+.. |建立專案畫面四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/13.png
+.. |建立專案畫面五| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/14.png
+.. |Import Library一| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/15.png
+.. |Import Library二| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/16.png
+.. |Import Library三| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/17.png
+.. |Import Library四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/18.png
 
