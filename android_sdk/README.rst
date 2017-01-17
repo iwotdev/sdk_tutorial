@@ -35,7 +35,7 @@ Target Android Devices 的部份，我們選擇 Phone and Tablet，而 Minimum S
 
 |建立專案畫面五|
 
-有了專案之後，接著我們就要把 iWoT Android SDK 加入此專案中。首先把下載回來的 SDK(iwot-sdk.aar) 複製一份到專案目錄的 app\\libs\\ 下。然後從上層選單選擇 File -> New -> New Module 開啟對話框，然後選擇 Import .JAR/.AAR Package，按下Next。
+有了專案之後，接著我們就要把 iWoT Android SDK 加入此專案中。首先把下載回來的 SDK(iwot-sdk.aar) 複製一份到專案目錄的 app/libs/ 下。然後從上層選單選擇 File -> New -> New Module 開啟對話框，然後選擇 Import .JAR/.AAR Package，按下Next。
 
 |Import Library一|
 
@@ -43,24 +43,19 @@ Target Android Devices 的部份，我們選擇 Phone and Tablet，而 Minimum S
 
 |Import Library二|
 
-這時候，Android Studio 會提示說 Gradle files 已經改變了，需要做 Sync。這時候還不要做 Sync，先打開 app\\build.gradle，在 dependencies 加入 iwot-sdk，
-
-::
-
-    dependencies {
-        ..............
-        compile project (':iwot-sdk')
-    }
-
-然後按下 Sync Now，或是工具列的 Sync Project with Gradle Files 也可以。
+這時候，Android Studio 會提示說 Gradle files 已經改變了，需要做 Sync。所以按下 Sync Now，或是工具列的 Sync Project with Gradle Files 也可以。
 
 |Import Library三|
 
-Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module，此時，就可以開始使用 SDK 所提供的 API 了。
+Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module。
 
 |Import Library四|
 
-接著開始修改 Layout 檔，預設為 activity\\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
+最後設定 App 的 Dependencies，此時就可以開始使用 SDK 所提供的 API 了。
+
+|Import Library五|
+
+接著開始修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
 
 ::
 
@@ -80,15 +75,14 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text = "Paused"
-                / >
+                android:text = "Paused" />
 
             <Switch
                 android:id="@+id/paused"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/ >
+                android:layout_height="wrap_content"/>
 
-        </LinearLayout >
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_x"
@@ -117,9 +111,9 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
             android:textSize="30sp"
             android:textStyle="bold" />
 
-    </LinearLayout/>
+    </LinearLayout>
 
-接下來，修改 Activity 檔，預設為 MainActivity.java，實作 SensorEventListener 以取得 Accelerometer 的數值並顯示於畫面中
+接下來，修改 MainActivity 類別，預設為 MainActivity.java，實作 SensorEventListener 以取得 Accelerometer 的數值並顯示於畫面中
 
 ::
 
@@ -187,9 +181,9 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
     private boolean connected = false;
     private int precision = 100;
 
-| thing 是表示用 iWoT SDK 所創建的裝置實例 (thing instance)
-| connected 是表示此裝置與 iWoT Cloud 的連線狀態
-| precision 是表示 Accelerometer 數值的精準度，我們之後會從 iWoT Cloud 來操作他
+| ``thing`` 是表示用 iWoT SDK 所創建的裝置實例 (thing instance)
+| ``connected`` 是表示此裝置與 iWoT Cloud 的連線狀態
+| ``precision`` 是表示 Accelerometer 數值的精準度，我們之後會從 iWoT Cloud 來操作他
 
 接下來 iWoT Device SDK 的所有動作都會透過 ``thing`` 來操作。基本流程如下
 
@@ -331,9 +325,9 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
     thing.emitEvents(var);
 
-其中 var 參數為 event 內容。這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是 **帶有三個浮點數值的 ``orientation``**。這個參數是 ``Model.VarObject`` 的物件形式，你可以透過 ``Model.parseVarObject`` 來將一個 JSON 字串轉換成此物件形式，或是自行以 ``new`` 的方式來建立，關於第二種方式，在下面提及 property 時會有範例。
+其中 var 參數為 event 內容。這個 event 必須包含在此裝置的 model 當中，以這個範例來講就是 **帶有三個浮點數值的 orientation**。這個參數是 ``Model.VarObject`` 的物件形式，你可以透過 ``Model.parseVarObject()`` 來將一個 JSON 字串轉換成此物件形式，或是自行以 ``new`` 的方式來建立，關於第二種方式，在下面提及 property 時會有範例。
 
-本範例發送 event 的動作實作在 ``onSensorChanged`` callback 中，在每次更新 Accelerometer 時，如果已連上 iWoT，會先根據 precision (使用者可透過 action 設定) 來修改 Accelerometer 數值的精準度，然後串成一個 JSON 字串，接著透過 ``Model.parseVarObject`` 將此 JSON 字串轉成物件型態，最後透過 ``thing.emitEvents()`` 將此 event 發送出去。
+本範例發送 event 的動作實作在 ``onSensorChanged`` callback 中，在每次更新 Accelerometer 時，如果已連上 iWoT，會先根據 ``precision`` (使用者可透過 action 設定) 來修改 Accelerometer 數值的精準度，然後串成一個 JSON 字串，接著透過 ``Model.parseVarObject()`` 將此 JSON 字串轉成物件型態，最後透過 ``thing.emitEvents()`` 將此 event 發送出去。
 
 ::
 
@@ -732,4 +726,5 @@ Global Rule Engine 的 debug 頁籤沒有顯示預期中的資料
 .. |Import Library二| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/16.png
 .. |Import Library三| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/17.png
 .. |Import Library四| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/18.png
+.. |Import Library五| image:: https://raw.githubusercontent.com/iwotdev/sdk_tutorial/master/android_sdk/images/19.png
 
