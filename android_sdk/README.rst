@@ -51,7 +51,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
 |Import Library四|
 
-最後設定 App 的 Dependencies，此時就可以開始使用 SDK 所提供的 API 了。
+最後設定 app 的 Dependencies，此時就可以開始使用 SDK 所提供的 API 了。
 
 |Import Library五|
 
@@ -116,6 +116,18 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 接下來，修改 MainActivity 類別，預設為 MainActivity.java，實作 SensorEventListener 以取得 Accelerometer 的數值並顯示於畫面中
 
 ::
+
+    package io.iwot.myapplication;
+
+    import android.hardware.Sensor;
+    import android.hardware.SensorEvent;
+    import android.hardware.SensorEventListener;
+    import android.hardware.SensorManager;
+    import android.support.v7.app.AppCompatActivity;
+    import android.os.Bundle;
+    import android.widget.CompoundButton;
+    import android.widget.Switch;
+    import android.widget.TextView;
 
     public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -374,7 +386,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
         items.add(new Model.VarItem(key, new Boolean(enabled)));
 
         ArrayList groups = new ArrayList();
-        groups.add(new Model.VarGroup(property, items, null, null, null));
+        groups.add(new Model.VarGroup(property, items));
 
         return new Model.VarObject("properties", groups);
     }
@@ -474,6 +486,24 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
 ::
 
+    package io.iwot.myapplication;
+
+    import android.hardware.Sensor;
+    import android.hardware.SensorEvent;
+    import android.hardware.SensorEventListener;
+    import android.hardware.SensorManager;
+    import android.support.v7.app.AppCompatActivity;
+    import android.os.Bundle;
+    import android.util.Log;
+    import android.widget.CompoundButton;
+    import android.widget.Switch;
+    import android.widget.TextView;
+
+    import java.util.ArrayList;
+
+    import io.iwot.androidsdk.Model;
+    import io.iwot.androidsdk.Thing;
+
     public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
         private Switch s_paused;
@@ -516,12 +546,12 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
             connectIWoT();
         }
-        
+
         private void connectIWoT() {
             String modelJSON = "{\"id\":\"iwot_android_thing_1\",\"classID\":\"iwot_android_thing_model\",\"name\":\"iWoT Android Thing\",\"properties\":{\"pause\":{\"name\":\"Pause or Resume Sensors\",\"values\":{\"paused\":{\"type\":\"boolean\"}}}},\"actions\":{\"precision\":{\"name\":\"Set Precision\",\"values\":{\"decimal\":{\"description\":\"decimal places\",\"type\":\"integer\",\"minValue\":0,\"maxValue\":5,\"required\":true}}}},\"events\":{\"orientation\":{\"name\":\"Orientation Sensor\",\"values\":{\"x\":{\"type\":\"float\"},\"y\":{\"type\":\"float\"},\"z\":{\"type\":\"float\"}}}}}";
-            String host = "192.168.22.3";
-            String accessKey = "NhhUzHnodoEbleowIFupo7Dk";
-            String secretKey = "9BF9w3d4WHJGfuoJjy-epSP9HbaVtgHBAgCE9g7is9kg_wv7";
+            String host = "rc2.iwot.io";
+            String accessKey = "[your_access_key]";
+            String secretKey = "[your_secret_key]";
             int keepAlive = 60;
             Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
 
@@ -534,14 +564,26 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
             thing.connect(getApplicationContext(), new Thing.IThingListener() {
 
                 @Override
-                public void onConnected() {
-                    Log.v("[iWoT]", "onConnected");
+                public void onConnect() {
+                    Log.v("[iWoT]", "onConnect");
                     connected = true;
                 }
 
                 @Override
-                public void onDisconnected() {
-                    Log.v("[iWoT]", "onDisconnected");
+                public void onReconnect() {
+                    Log.v("[iWoT]", "onReconnect");
+                    connected = true;
+                }
+
+                @Override
+                public void onOffline() {
+                    Log.v("[iWoT]", "onOffline");
+                    connected = false;
+                }
+
+                @Override
+                public void onClose() {
+                    Log.v("[iWoT]", "onClose");
                     connected = false;
                 }
 
@@ -577,13 +619,13 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
                 }
 
                 @Override
-                public boolean onSystem(Model.VarObject var) {
+                public boolean onSystems(Model.VarObject var) {
                     Log.v("iWoT", "onSystem");
                     return true;
                 }
 
                 @Override
-                public void onFailure(String s) {
+                public void onError(String s) {
                     Log.v("[iWoT]", "onError: " + s);
                 }
             });
@@ -594,7 +636,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
             items.add(new Model.VarItem(key, new Boolean(enabled)));
 
             ArrayList groups = new ArrayList();
-            groups.add(new Model.VarGroup(property, items, null, null, null));
+            groups.add(new Model.VarGroup(property, items));
 
             return new Model.VarObject("properties", groups);
         }
