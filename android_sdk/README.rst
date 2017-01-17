@@ -35,7 +35,7 @@ Target Android Devices 的部份，我們選擇 Phone and Tablet，而 Minimum S
 
 |建立專案畫面五|
 
-有了專案之後，接著我們就要把 iWoT Android SDK 加入此專案中。首先把下載回來的 SDK(iwot-sdk.aar) 複製一份到專案目錄的 app\libs\ 下。然後從上層選單選擇 File -> New -> New Module 開啟對話框，然後選擇 Import .JAR/.AAR Package，按下Next。
+有了專案之後，接著我們就要把 iWoT Android SDK 加入此專案中。首先把下載回來的 SDK(iwot-sdk.aar) 複製一份到專案目錄的 app\\libs\\ 下。然後從上層選單選擇 File -> New -> New Module 開啟對話框，然後選擇 Import .JAR/.AAR Package，按下Next。
 
 |Import Library一|
 
@@ -43,7 +43,16 @@ Target Android Devices 的部份，我們選擇 Phone and Tablet，而 Minimum S
 
 |Import Library二|
 
-這時候，Android Studio 會提示說 Gradle files 已經改變了，需要做 Sync。所以按下 Sync Now，或是工具列的 Sync Project with Gradle Files 也可以。
+這時候，Android Studio 會提示說 Gradle files 已經改變了，需要做 Sync。這時候還不要做 Sync，先打開 app\\build.gradle，在 dependencies 加入 iwot-sdk，
+
+::
+
+    dependencies {
+        ..............
+        compile project (':iwot-sdk')
+    }
+
+然後按下 Sync Now，或是工具列的 Sync Project with Gradle Files 也可以。
 
 |Import Library三|
 
@@ -51,7 +60,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
 
 |Import Library四|
 
-接著開始修改 Layout 檔，預設為 activity\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
+接著開始修改 Layout 檔，預設為 activity\\_main.xml，加入 3 個 TextView 分別來顯示 Accelerometer 的 XYZ 值，並用 1 個 Switch 來暫停或重啟 Accelerometer 數值的顯示
 
 ::
 
