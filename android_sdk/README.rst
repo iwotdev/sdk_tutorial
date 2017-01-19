@@ -464,9 +464,8 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
         String accessKey = "[your_access_key]";
         String secretKey = "[your_secret_key]";
         int keepAlive = 60;
-        Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
 
-        Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
+        Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, keepAlive, host);
         thing = new Thing();
         if (!thing.init(config)) {
             Log.v("[iWoT]", "Fail to init iWoT SDK");
@@ -477,7 +476,7 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
         });        
     }
 
-``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *rc2.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是本範例 model 的字串型態。 ``keepAlive`` 是本裝置與iWoT Cloud 更新連線的間隔時間，詳細說明請參閱 API 文件，在此設定為 60 秒。 ``defaultProperties`` 是本裝置初始的 Properties，在此填入 pause 開關的初始狀態。
+``accessKey`` 跟 ``secretKey`` 請填入一開始準備開發環境時取得的 *開發者金鑰*。 ``host`` 預設為 *rc2.iwot.io*，如果您使用的 iWoT 為私有雲或特殊客製化版本，請填入對應的 iWoT server 位址。 ``modelJSON`` 就是本範例 model 的字串型態。 ``keepAlive`` 是本裝置與iWoT Cloud 更新連線的間隔時間，詳細說明請參閱 API 文件，在此設定為 60 秒。
 
 初始化成功之後呼叫 ``thing.connect()`` 並傳入 context 與前一節準備的 callback 及 handler。
 
@@ -553,9 +552,8 @@ Sync 完成後，就可以看到專案裡出現了 iwot-sdk 這個新的 module�
             String accessKey = "[your_access_key]";
             String secretKey = "[your_secret_key]";
             int keepAlive = 60;
-            Model.VarObject defaultProperties = Model.parseVarObject("{\"pause\":{\"values\":{\"paused\":false}}}");
 
-            Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, defaultProperties, keepAlive, host);
+            Thing.Config config = new Thing.Config(accessKey, secretKey, modelJSON, keepAlive, host);
             thing = new Thing();
             if (!thing.init(config)) {
                 Log.v("[iWoT]", "Fail to init iWoT SDK");
