@@ -8,7 +8,7 @@ iWoT Device SDK 協助開發者快速地將硬體裝置連接到 iWoT。該套�
 申請帳號
 --------
 
-請先於 `iWoT <http://rc2.iwot.io>`_ 網頁申請帳號，並取得 `開發者金鑰 <http://rc2.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)。
+請先於 `iWoT <https://rc2.iwot.io>`_ 網頁申請帳號，並取得 `開發者金鑰 <https://rc2.iwot.io/#/web/sdks>`_ (在金鑰上按下滑鼠左鍵可複製到剪貼簿)。
 
 硬體
 ----
@@ -62,7 +62,7 @@ LED 傳感器一枚
 
 ::
 
-    $ wget http://rc2.iwot.io:9107/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
+    $ wget https://rc2.iwot.io:9108/sdk/iwot-c-sdk-for-esp8266-rtos.tar.gz ; tar zxvf iwot-c-sdk-for-esp8266-rtos.tar.gz
 
 查看 libraries 目錄可以看到以下結構 :
 
@@ -533,7 +533,7 @@ LED 傳感器一枚
 與 iWoT Cloud 互動
 ~~~~~~~~~~~~~~~~~~
 
-登入 `iWoT <http://rc2.iwot.io>`_，可以看到此裝置已上線
+登入 `iWoT <https://rc2.iwot.io>`_，可以看到此裝置已上線
 
 |4|
 
