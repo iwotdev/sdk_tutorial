@@ -331,7 +331,7 @@ LED 傳感器一枚
     IWOTERRORCODE ec = IWOT_EC_SUCCESS;
     char *modelJSON = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch \":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
 
-    if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, 0, &iwotConfig)) {
+    if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, &iwotConfig)) {
         return 0;
     }
 
@@ -427,7 +427,7 @@ LED 傳感器一枚
         IWOTERRORCODE ec = IWOT_EC_SUCCESS;
         char *modelJSON = "{\"classID\":\"model_esp8266_led\",\"id\":\"esp_00001\",\"name\":\"ESP_Sample_Led\",\"actions\":{\"switch\":{\"values\":{\"ledState\":{\"type\":\"integer\"}}}}}";
 
-        if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, 0, &iwotConfig)) {
+        if(IWOT_EC_SUCCESS != iwot_util_create_config(accessKey, secretKey, host,  0, modelJSON, &iwotConfig)) {
             return 0;
         }
 
