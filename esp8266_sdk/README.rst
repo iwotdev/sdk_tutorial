@@ -462,6 +462,22 @@ LED 傳感器一枚
         return onLine;
     }
 
+    void gpio_init() {
+        uint32 pin = 5; // D1 : GPIO 5
+        gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
+        uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
+        GPIO_AS_OUTPUT(gpio_pin_mask);
+    }
+
+    void wifi_setup() {
+        //Connect WIFI
+        struct station_config *cfg = zalloc(sizeof(struct station_config));
+        sprintf((char*)cfg->ssid, "your_wifi_ssid");
+        sprintf((char*)cfg->password, "your_wifi_password");
+        wifi_station_set_config(cfg);
+        wifi_set_opmode(STATION_MODE);
+    }
+
     void iwot_task(void * pvParameters)
     {
       wifi_setup();                               // <--- add update wifi settings!
@@ -479,22 +495,7 @@ LED 傳感器一枚
         }
       } 
     }
-
-    void gpio_init() {
-        uint32 pin = 5; // D1 : GPIO 5
-        gpio_pin_intr_state_set(pin, GPIO_PIN_INTR_DISABLE);
-        uint16 gpio_pin_mask = BIT(pin); // GPIO_Pin_5;
-        GPIO_AS_OUTPUT(gpio_pin_mask);
-    }
-
-    void wifi_setup() {
-        //Connect WIFI
-        struct station_config *cfg = zalloc(sizeof(struct station_config));
-        sprintf((char*)cfg->ssid, "your_wifi_ssid");
-        sprintf((char*)cfg->password, "your_wifi_password");
-        wifi_station_set_config(cfg);
-        wifi_set_opmode(STATION_MODE);
-    }
+    
     void user_init(void)
     {
         printf("SDK version:%s,%u\n", system_get_sdk_version(),__LINE__ );
